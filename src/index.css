@@ -825,6 +825,9 @@ html {
 .footer a:hover { color: var(--brass); }
 .footer-brand .brand-name { color: var(--white); }
 .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-block: 22px; font-size: 13px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.footer-social { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.footer-social a { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; color: rgba(255,255,255,0.6); transition: color 0.2s, background 0.2s; }
+.footer-social a:hover { color: #fff; background: rgba(255,255,255,0.12); }
 @media (max-width: 820px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) {
   .footer-brand { text-align: left; }
