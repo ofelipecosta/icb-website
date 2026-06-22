@@ -175,7 +175,7 @@ function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: nu
       variants={fadeUp}
       initial={reduce ? false : 'hidden'}
       whileInView="show"
-      viewport={{ once: true, margin: '-80px' }}
+      viewport={{ once: true, amount: 0 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}
