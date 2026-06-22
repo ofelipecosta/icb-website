@@ -40,9 +40,23 @@ export interface Noticia {
   corpo?: PortableTextBlock[]
 }
 
+export interface Documento {
+  _id: string
+  titulo: string
+  categoria: string
+  dataPublicacao?: string
+  ordem: number
+  arquivoUrl?: string
+}
+
 /* ===========================================================================
  * Queries GROQ
  * ======================================================================== */
+
+const DOCUMENTOS_QUERY = `*[_type == "documento"] | order(categoria asc, ordem asc){
+  _id, titulo, categoria, dataPublicacao, ordem,
+  "arquivoUrl": arquivo.asset->url
+}`
 
 const EVENTOS_QUERY = `*[_type == "evento"] | order(destaque desc, data asc){
   _id, titulo, categoria, destaque, data, local, detalhe, ctaLabel, linkUrl, imagem, "slug": slug.current
@@ -206,6 +220,16 @@ export async function getNoticias(): Promise<Noticia[]> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar notícias, usando fallback.', err)
     return NOTICIAS_FALLBACK
+  }
+}
+
+export async function getDocumentos(): Promise<Documento[]> {
+  if (!sanityConfigured || !sanityClient) return []
+  try {
+    return await sanityClient.fetch<Documento[]>(DOCUMENTOS_QUERY)
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar documentos.', err)
+    return []
   }
 }
 

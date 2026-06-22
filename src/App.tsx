@@ -35,6 +35,8 @@ import {
   getNoticiasNav,
   type NoticiaNav,
   getTodasNoticias,
+  getDocumentos,
+  type Documento,
   getInstalacoes,
   getRegatas,
   formatDataCurta,
@@ -1062,23 +1064,13 @@ function Administracao() {
   )
 }
 
-const documentos = [
-  {
-    titulo: 'Estatuto',
-    descricao: 'Confira o nosso Estatuto vigente atualizado em Setembro de 2023.',
-    arquivo: null as string | null,
-  },
-  {
-    titulo: 'Regulamento Geral da Náutica',
-    descricao: 'Confira nosso Regulamento Geral da Náutica aprovado em 26.08.2025.',
-    arquivo: null as string | null,
-  },
-  {
-    titulo: 'Regulamento da Churrasqueira',
-    descricao: 'Com objetivo de tornarmos a utilização confortável para todos, criamos o Regulamento da Churrasqueira.',
-    arquivo: null as string | null,
-  },
-]
+const CATEGORIA_LABELS: Record<string, string> = {
+  oficiais: 'Documentos Oficiais',
+  atas: 'Atas',
+  editais: 'Editais',
+  regulamentos: 'Regulamentos',
+  outros: 'Outros',
+}
 
 function NossaHistoria() {
   return (
@@ -1284,34 +1276,74 @@ function IdentidadeFilosofia() {
 }
 
 function DocumentosOficiais() {
+  const [docs, setDocs] = useState<Documento[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    getDocumentos()
+      .then((d) => { if (active) { setDocs(d); setLoading(false) } })
+      .catch(() => { if (active) setLoading(false) })
+    return () => { active = false }
+  }, [])
+
+  const categorias = Array.from(new Set(docs.map(d => d.categoria)))
+
+  const DocIcon = () => (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+  )
+
   return (
     <main id="conteudo" className="section" style={{ paddingTop: 120 }}>
       <div className="container" style={{ maxWidth: 800 }}>
         <Reveal>
           <p className="eyebrow" style={{ color: 'var(--brass)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>O Clube</p>
           <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(28px, 5vw, 44px)', color: 'var(--navy)', marginBottom: 16 }}>Documentos Oficiais</h1>
-          <p style={{ color: 'var(--muted)', marginBottom: 56, maxWidth: 60 + 'ch' }}>Acesse os documentos que regem o funcionamento do Iate Clube Brasileiro.</p>
+          <p style={{ color: 'var(--muted)', marginBottom: 56, maxWidth: '60ch' }}>Acesse os documentos que regem o funcionamento do Iate Clube Brasileiro.</p>
         </Reveal>
-        <div className="docs-list">
-          {documentos.map((doc, i) => (
-            <Reveal key={doc.titulo} delay={i * 0.08}>
-            <div className="docs-item">
-              <div className="docs-item-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-              <div className="docs-item-body">
-                <h3 className="docs-item-title">{doc.titulo}</h3>
-                <p className="docs-item-desc">{doc.descricao}</p>
-              </div>
-              <div className="docs-item-action">
-                {doc.arquivo ? (
-                  <a href={doc.arquivo} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 14, padding: '10px 20px' }}>Acessar agora</a>
-                ) : (
-                  <span className="docs-btn-soon">Em breve</span>
-                )}
-              </div>
+
+        {loading && <div className="noticia-loading">Carregando…</div>}
+
+        {!loading && docs.length === 0 && (
+          <div className="noticia-loading">Nenhum documento disponível no momento.</div>
+        )}
+
+        {!loading && categorias.map(cat => (
+          <div key={cat} style={{ marginBottom: 48 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: 'var(--navy)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 20, paddingBottom: 10, borderBottom: '1px solid var(--line)' }}>
+              {CATEGORIA_LABELS[cat] ?? cat}
+            </h2>
+            <div className="docs-list">
+              {docs.filter(d => d.categoria === cat).map((doc, i) => (
+                <Reveal key={doc._id} delay={i * 0.06}>
+                  <div className="docs-item">
+                    <div className="docs-item-icon"><DocIcon /></div>
+                    <div className="docs-item-body">
+                      <h3 className="docs-item-title">{doc.titulo}</h3>
+                      {doc.dataPublicacao && (
+                        <p className="docs-item-desc">{formatDataLonga(doc.dataPublicacao)}</p>
+                      )}
+                    </div>
+                    <div className="docs-item-action">
+                      {doc.arquivoUrl ? (
+                        <a href={doc.arquivoUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 14, padding: '10px 20px' }}>
+                          Acessar agora
+                        </a>
+                      ) : (
+                        <span className="docs-btn-soon">Em breve</span>
+                      )}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
             </div>
-            </Reveal>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </main>
   )
