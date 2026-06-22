@@ -24,6 +24,9 @@ import {
   Heart,
   Share2,
   Check,
+  Pin,
+  Info,
+  AlertTriangle,
 } from 'lucide-react'
 import {
   getEventos,
@@ -40,6 +43,7 @@ import {
   getInstalacoes,
   getRegatas,
   getAvisos,
+  getComunicado,
   formatDataCurta,
   formatDataLonga,
   formatMesAno,
@@ -48,6 +52,7 @@ import {
   type Instalacao,
   type Regata,
   type Aviso,
+  type Comunicado,
   EVENTOS_FALLBACK,
   NOTICIAS_FALLBACK,
   INSTALACOES_FALLBACK,
@@ -568,7 +573,10 @@ function NewsCard3({ n }: { n: Noticia }) {
         {!capa && <Newspaper size={22} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
       </div>
       <div className="news-card3-body">
-        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        <span className="news-date-row">
+          {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
+          {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        </span>
         <h3>{stripEmoji(n.titulo)}</h3>
         {href && <span className="news-read-more">Ler mais <ArrowRight size={13} /></span>}
       </div>
@@ -592,7 +600,10 @@ function NewsCard2H({ n }: { n: Noticia }) {
         {!capa && <Newspaper size={18} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
       </div>
       <div className="news-card2h-body">
-        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        <span className="news-date-row">
+          {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
+          {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        </span>
         <h3>{stripEmoji(n.titulo)}</h3>
       </div>
     </article>
@@ -642,6 +653,7 @@ function Noticias() {
             <div className="news-hero-bg" style={heroImg ? { backgroundImage: `url(${heroImg})` } : undefined} />
             <div className="news-hero-overlay" />
             <div className="news-hero-content">
+              {hero.fixado && <span className="news-pin"><Pin size={12} /> Fixado</span>}
               {hero.data && <span className="news-date" style={{ color: 'rgba(255,255,255,0.65)' }}>{formatDataLonga(hero.data)}</span>}
               <h3>{stripEmoji(hero.titulo)}</h3>
               {hero.resumo && <p>{hero.resumo}</p>}
@@ -715,7 +727,10 @@ function TodasNoticias() {
                       {!capa && <Newspaper size={28} strokeWidth={1.5} />}
                     </div>
                     <div className="news-body">
-                      {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+                      <span className="news-date-row">
+                        {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
+                        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+                      </span>
                       <h3>{stripEmoji(n.titulo)}</h3>
                       {n.resumo && <p>{stripEmoji(n.resumo)}</p>}
                       {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
@@ -928,6 +943,48 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
         )}
       </div>
     </main>
+  )
+}
+
+function AnnouncementBar() {
+  const [com, setCom] = useState<Comunicado | null>(null)
+  const [dismissed, setDismissed] = useState(false)
+
+  useEffect(() => {
+    let active = true
+    getComunicado().then((c) => {
+      if (!active || !c) return
+      setCom(c)
+      // Mostra de novo sempre que um novo comunicado for publicado (id diferente)
+      const lastDismissed = localStorage.getItem('icb-comunicado-dismissed')
+      setDismissed(lastDismissed === c._id)
+    })
+    return () => { active = false }
+  }, [])
+
+  if (!com || dismissed) return null
+
+  const close = () => {
+    localStorage.setItem('icb-comunicado-dismissed', com._id)
+    setDismissed(true)
+  }
+
+  const isUrgente = com.cor !== 'azul'
+  const Icon = isUrgente ? AlertTriangle : Info
+
+  return (
+    <div className={`ann-bar ${isUrgente ? 'ann-bar--red' : 'ann-bar--navy'}`} role="region" aria-label="Comunicado">
+      <Icon size={17} className="ann-bar-ico" />
+      <p className="ann-bar-txt">{com.texto}</p>
+      {com.link && (
+        <a className="ann-bar-cta" {...linkProps(com.link)}>
+          {com.ctaLabel || 'Saiba mais'} →
+        </a>
+      )}
+      <button className="ann-bar-x" onClick={close} aria-label="Fechar comunicado">
+        <X size={16} />
+      </button>
+    </div>
   )
 }
 
@@ -2080,6 +2137,7 @@ function App() {
   return (
     <>
       <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
+      <AnnouncementBar />
       <Header currentPage={page} />
       {subPage ? (
         <PageTransition pageKey={page}>{subPage}</PageTransition>

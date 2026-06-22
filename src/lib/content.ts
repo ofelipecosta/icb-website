@@ -38,6 +38,7 @@ export interface Noticia {
   capa?: SanityImageSource
   slug?: string
   corpo?: PortableTextBlock[]
+  fixado?: boolean
 }
 
 export interface Documento {
@@ -49,9 +50,21 @@ export interface Documento {
   arquivoUrl?: string
 }
 
+export interface Comunicado {
+  _id: string
+  texto: string
+  cor?: 'vermelho' | 'azul'
+  ctaLabel?: string
+  link?: string
+}
+
 /* ===========================================================================
  * Queries GROQ
  * ======================================================================== */
+
+const COMUNICADO_QUERY = `*[_type == "comunicado" && ativo == true] | order(_updatedAt desc)[0]{
+  _id, texto, cor, ctaLabel, link
+}`
 
 const DOCUMENTOS_QUERY = `*[_type == "documento"] | order(categoria asc, ordem asc){
   _id, titulo, categoria, dataPublicacao, ordem,
@@ -70,12 +83,12 @@ const EVENTOS_NAV_QUERY = `*[_type == "evento" && defined(slug)] | order(data as
   "slug": slug.current, titulo
 }`
 
-const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...6]{
-  _id, titulo, data, resumo, capa, "slug": slug.current
+const NOTICIAS_QUERY = `*[_type == "noticia"] | order(fixado desc, data desc)[0...6]{
+  _id, titulo, data, resumo, capa, "slug": slug.current, fixado
 }`
 
-const TODAS_NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc){
-  _id, titulo, data, resumo, capa, "slug": slug.current
+const TODAS_NOTICIAS_QUERY = `*[_type == "noticia"] | order(fixado desc, data desc){
+  _id, titulo, data, resumo, capa, "slug": slug.current, fixado
 }`
 
 const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]{
@@ -230,6 +243,16 @@ export async function getDocumentos(): Promise<Documento[]> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar documentos.', err)
     return []
+  }
+}
+
+export async function getComunicado(): Promise<Comunicado | null> {
+  if (!sanityConfigured || !sanityClient) return null
+  try {
+    return await sanityClient.fetch<Comunicado | null>(COMUNICADO_QUERY)
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar comunicado.', err)
+    return null
   }
 }
 
