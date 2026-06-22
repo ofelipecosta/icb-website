@@ -400,7 +400,7 @@ function EventosCards() {
           <div className="section-head" style={{ marginBottom: 32 }}>
             <div>
               <div className="eyebrow">Agenda do clube</div>
-              <h2>Próximas regatas e eventos</h2>
+              <h2>Próximos Eventos</h2>
             </div>
             <a className="section-link" href="https://regatas.icb.org.br" target="_blank" rel="noreferrer">
               Ver calendário completo <ArrowRight size={15} />
