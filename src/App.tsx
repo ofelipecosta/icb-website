@@ -1574,7 +1574,7 @@ function Eventos() {
             </div>
             <div className="evcal-aviso">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-              Programação gerenciada pelas secretarias via CMS. Sujeito a alterações.
+              Programação gerenciada pelas secretarias. Sujeito a alterações.
             </div>
           </Reveal>
           {visiveis.length > 0 ? (
