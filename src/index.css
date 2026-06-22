@@ -520,7 +520,8 @@ html {
   background-position: center 40%;
 }
 @media (max-width: 600px) {
-  .hero-bg { background-position: center center; }
+  .hero-bg { background-position: center 30%; }
+  .hero-inner { padding-block: 56px 64px; }
 }
 .hero-bg::after {
   content: '';
