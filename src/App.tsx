@@ -762,7 +762,7 @@ function EventoDetalhe({ slug }: { slug: string }) {
 
         {!loading && evento && (
           <article>
-            {capa && <div className="noticia-capa" style={{ backgroundImage: `url(${capa})` }} />}
+            {capa && <img className="noticia-capa" src={capa} alt={evento.titulo} />}
             <div className="noticia-content">
               {evento.categoria && <span className="ev-card-b-tag" style={{ marginBottom: 12, display: 'inline-block' }}>{evento.categoria}</span>}
               <h1>{evento.titulo}</h1>
@@ -869,7 +869,7 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
         {!loading && noticia && (
           <article>
             {capa && (
-              <div className="noticia-capa" style={{ backgroundImage: `url(${capa})` }} />
+              <img className="noticia-capa" src={capa} alt={noticia.titulo} />
             )}
             <div className="noticia-content">
               {noticia.data && (
