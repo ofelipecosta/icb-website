@@ -27,6 +27,7 @@ import {
 } from 'lucide-react'
 import {
   getEventos,
+  getEvento,
   getNoticias,
   getNoticia,
   getInstalacoes,
@@ -486,8 +487,18 @@ function EventosCards() {
         >
           {cards.map((ev) => {
             const img = urlForImage(ev.imagem)
+            const eventoHref = ev.slug ? `#evento/${ev.slug}` : undefined
             return (
-              <motion.div key={ev._id} className="ev-card-b" variants={fadeUp} transition={{ duration: 0.5 }}>
+              <motion.div
+                key={ev._id}
+                className={`ev-card-b${eventoHref ? ' ev-card-b--link' : ''}`}
+                variants={fadeUp}
+                transition={{ duration: 0.5 }}
+                onClick={eventoHref ? () => { window.location.hash = eventoHref.slice(1) } : undefined}
+                role={eventoHref ? 'button' : undefined}
+                tabIndex={eventoHref ? 0 : undefined}
+                onKeyDown={eventoHref ? (e) => e.key === 'Enter' && (window.location.hash = eventoHref.slice(1)) : undefined}
+              >
                 {img && (
                   <div className="ev-card-b-photo" style={{ backgroundImage: `url(${img})` }} />
                 )}
@@ -496,7 +507,7 @@ function EventosCards() {
                     {ev.categoria && <span className="ev-card-b-tag">{ev.categoria}</span>}
                     <div className="ev-card-b-icons">
                       {ev.data && <AddToCalendar ev={ev} iconOnly />}
-                      <ShareButton title={ev.titulo} url={`#eventos`} />
+                      <ShareButton title={ev.titulo} url={eventoHref ?? '#eventos'} />
                     </div>
                   </div>
                   <h3 className="ev-card-b-title">{ev.titulo}</h3>
@@ -504,7 +515,7 @@ function EventosCards() {
                     {[ev.local, formatDataCurta(ev.data)].filter(Boolean).join(' · ')}
                   </p>
                   {ev.linkUrl && (
-                    <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)}>
+                    <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
                       {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
                     </a>
                   )}
@@ -575,6 +586,74 @@ function Noticias() {
   )
 }
 
+
+function EventoDetalhe({ slug }: { slug: string }) {
+  const [evento, setEvento] = useState<Evento | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    getEvento(slug).then((e) => {
+      if (active) { setEvento(e); setLoading(false) }
+    })
+    return () => { active = false }
+  }, [slug])
+
+  const capa = urlForImage(evento?.imagem)
+
+  return (
+    <main id="conteudo" className="noticia-detalhe">
+      <div className="container">
+        <div className="noticia-topbar">
+          <button className="noticia-back" onClick={() => history.back()} aria-label="Voltar">
+            <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} /> Voltar
+          </button>
+          {evento && <ShareButton title={evento.titulo} url={`#evento/${slug}`} />}
+        </div>
+
+        {loading && <div className="noticia-loading">Carregando…</div>}
+        {!loading && !evento && <div className="noticia-loading">Evento não encontrado.</div>}
+
+        {!loading && evento && (
+          <article>
+            {capa && <div className="noticia-capa" style={{ backgroundImage: `url(${capa})` }} />}
+            <div className="noticia-content">
+              {evento.categoria && <span className="ev-card-b-tag" style={{ marginBottom: 12, display: 'inline-block' }}>{evento.categoria}</span>}
+              <h1>{evento.titulo}</h1>
+              {(evento.data || evento.local) && (
+                <p className="noticia-resumo">
+                  {[formatDataLonga(evento.data), evento.local].filter(Boolean).join(' · ')}
+                </p>
+              )}
+              {evento.detalhe && <p style={{ color: 'var(--muted)', marginBottom: 24 }}>{evento.detalhe}</p>}
+              {evento.descricao && evento.descricao.length > 0 && (
+                <div className="noticia-corpo">
+                  <PortableText
+                    value={evento.descricao}
+                    components={{
+                      types: {
+                        image: ({ value }) => {
+                          const url = urlForImage(value)
+                          return url ? <img src={url} alt="" className="noticia-corpo-img" /> : null
+                        },
+                      },
+                    }}
+                  />
+                </div>
+              )}
+              {evento.linkUrl && (
+                <a className="btn btn-primary" {...linkProps(evento.linkUrl)} style={{ marginTop: 24, display: 'inline-flex' }}>
+                  {evento.ctaLabel || 'Saiba mais'} <ArrowRight size={15} style={{ marginLeft: 6 }} />
+                </a>
+              )}
+            </div>
+          </article>
+        )}
+      </div>
+    </main>
+  )
+}
 
 function NoticiaDetalhe({ slug }: { slug: string }) {
   const [noticia, setNoticia] = useState<Noticia | null>(null)
@@ -1651,13 +1730,17 @@ function isNoticiaPage(hash: string) {
   return hash.startsWith('#noticia/')
 }
 
+function isEventoPage(hash: string) {
+  return hash.startsWith('#evento/')
+}
+
 function useCurrentPage() {
   const [page, setPage] = useState(() => window.location.hash)
   useEffect(() => {
     const handler = () => {
       const hash = window.location.hash
       // Scroll ao topo apenas em trocas de subpágina
-      if (SUB_PAGES.has(hash) || SUB_PAGES.has(page) || isNoticiaPage(hash) || isNoticiaPage(page)) {
+      if (SUB_PAGES.has(hash) || SUB_PAGES.has(page) || isNoticiaPage(hash) || isNoticiaPage(page) || isEventoPage(hash) || isEventoPage(page)) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
       setPage(hash)
@@ -1698,8 +1781,10 @@ function App() {
 
 
   const noticiaSlug = isNoticiaPage(page) ? page.replace('#noticia/', '') : null
+  const eventoSlug = isEventoPage(page) ? page.replace('#evento/', '') : null
 
   const subPage = noticiaSlug ? <NoticiaDetalhe slug={noticiaSlug} /> :
+    eventoSlug ? <EventoDetalhe slug={eventoSlug} /> :
     isAdm ? <Administracao /> : isOuv ? <ContatoPage /> : isDocs ? <DocumentosOficiais /> : isContato ? <ContatoPage /> :
     isHist ? <NossaHistoria /> : isIdfi ? <IdentidadeFilosofia /> : isInst ? <Instalacoes /> :
     isRegatas ? <VelasRegatas /> : isSecNaut ? <SecretariaNautica /> : isEventos ? <Eventos /> : null

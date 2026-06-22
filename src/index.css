@@ -759,6 +759,7 @@ html {
 }
 .news-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(10, 39, 66, 0.12); }
 .news-card--link { cursor: pointer; }
+.ev-card-b--link { cursor: pointer; }
 .news-read-more { display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 13px; font-weight: 600; color: var(--brass); letter-spacing: 0.03em; }
 
 /* ===== Share button ===== */

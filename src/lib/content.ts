@@ -8,20 +8,16 @@ import { sanityClient, sanityConfigured } from './sanity'
 export interface Evento {
   _id: string
   titulo: string
-  /** Rótulo exibido (ex.: "Regata", "Social", "Canoagem") */
   categoria: string
-  /** Quando true, vira o card grande em destaque na seção */
   destaque: boolean
-  /** ISO datetime */
   data?: string
   local?: string
-  /** Linha de apoio (ex.: "Classes ILCA · Optimist · Snipe") */
   detalhe?: string
-  /** Texto do botão (ex.: "Inscrever-se online", "Reservar mesa") */
   ctaLabel?: string
-  /** Destino do botão (ex.: https://regatas.icb.org.br) */
   linkUrl?: string
   imagem?: SanityImageSource
+  slug?: string
+  descricao?: PortableTextBlock[]
 }
 
 export interface PortableTextBlock {
@@ -49,7 +45,11 @@ export interface Noticia {
  * ======================================================================== */
 
 const EVENTOS_QUERY = `*[_type == "evento"] | order(destaque desc, data asc){
-  _id, titulo, categoria, destaque, data, local, detalhe, ctaLabel, linkUrl, imagem
+  _id, titulo, categoria, destaque, data, local, detalhe, ctaLabel, linkUrl, imagem, "slug": slug.current
+}`
+
+const EVENTO_BY_SLUG_QUERY = `*[_type == "evento" && slug.current == $slug][0]{
+  _id, titulo, categoria, destaque, data, local, detalhe, ctaLabel, linkUrl, imagem, "slug": slug.current, descricao
 }`
 
 const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
@@ -121,6 +121,16 @@ export const NOTICIAS_FALLBACK: Noticia[] = [
 /* ===========================================================================
  * Funções de busca (com fallback resiliente)
  * ======================================================================== */
+
+export async function getEvento(slug: string): Promise<Evento | null> {
+  if (!sanityConfigured || !sanityClient) return null
+  try {
+    return await sanityClient.fetch<Evento | null>(EVENTO_BY_SLUG_QUERY, { slug })
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar evento.', err)
+    return null
+  }
+}
 
 export async function getEventos(): Promise<Evento[]> {
   if (!sanityConfigured || !sanityClient) return EVENTOS_FALLBACK
