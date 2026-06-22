@@ -1535,26 +1535,11 @@ function VelasRegatas() {
       <div className="section" style={{ background: 'var(--cream)' }}>
         <div className="container" style={{ maxWidth: 900 }}>
           <Reveal>
-            <div className="naut-about">
-              <div>
-                <p className="eyebrow" style={{ color: 'var(--brass)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>O Departamento</p>
-                <h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px, 3.5vw, 36px)', color: 'var(--navy)', marginBottom: 20 }}>Tradição de vela na Baía de Guanabara</h2>
-                <p style={{ color: 'var(--muted)', fontSize: 16, lineHeight: 1.8, marginBottom: 16 }}>O Departamento de Velas e Regatas do ICB organiza competições para equipes experientes e amadoras, oferecendo a chance de se prepararem ao mais alto nível para as grandes reuniões da temporada.</p>
-                <p style={{ color: 'var(--muted)', fontSize: 16, lineHeight: 1.8 }}>Em 2016, o clube foi palco de treinamento das melhores equipes olímpicas do mundo, consolidando nossa reputação como um dos principais centros náuticos do Brasil.</p>
-              </div>
-              <div className="naut-stats">
-                {[
-                  { num: '4', label: 'Competições por temporada' },
-                  { num: '1906', label: 'Fundação do clube' },
-                  { num: '2016', label: 'Sede de treinamento olímpico' },
-                  { num: '120+', label: 'Anos de tradição náutica' },
-                ].map(s => (
-                  <div key={s.label} className="naut-stat">
-                    <div className="naut-stat-num">{s.num}</div>
-                    <div className="naut-stat-label">{s.label}</div>
-                  </div>
-                ))}
-              </div>
+            <div>
+              <p className="eyebrow" style={{ color: 'var(--brass)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>O Departamento</p>
+              <h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px, 3.5vw, 36px)', color: 'var(--navy)', marginBottom: 20 }}>Tradição de vela na Baía de Guanabara</h2>
+              <p style={{ color: 'var(--muted)', fontSize: 16, lineHeight: 1.8, marginBottom: 16 }}>O Departamento de Velas e Regatas do ICB organiza competições para equipes experientes e amadoras, oferecendo a chance de se prepararem ao mais alto nível para as grandes reuniões da temporada.</p>
+              <p style={{ color: 'var(--muted)', fontSize: 16, lineHeight: 1.8 }}>Em 2016, o clube foi palco de treinamento das melhores equipes olímpicas do mundo, consolidando nossa reputação como um dos principais centros náuticos do Brasil.</p>
             </div>
           </Reveal>
         </div>
@@ -1569,7 +1554,7 @@ function VelasRegatas() {
                 <p className="eyebrow" style={{ color: 'var(--brass)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Temporada 2026</p>
                 <h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(24px, 3.5vw, 36px)', color: 'var(--navy)', margin: 0 }}>Calendário de Regatas</h2>
               </div>
-              <a href="https://regatas.icb.org.br" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 14 }}>Ver inscrições →</a>
+              <a href="https://regatas.icb.org.br" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 14 }}>Inscrever-se →</a>
             </div>
           </Reveal>
           <div className="naut-regatas">
