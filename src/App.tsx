@@ -544,18 +544,69 @@ function EventosCards() {
   )
 }
 
+function NewsCard3({ n }: { n: Noticia }) {
+  const capa = urlForImage(n.capa)
+  const href = n.slug ? `#noticia/${n.slug}` : undefined
+  const go = () => href && (window.location.hash = href.slice(1))
+  return (
+    <article
+      className={`news-card3${href ? ' news-card--link' : ''}`}
+      onClick={href ? go : undefined}
+      role={href ? 'button' : undefined}
+      tabIndex={href ? 0 : undefined}
+      onKeyDown={href ? (e) => e.key === 'Enter' && go() : undefined}
+    >
+      <div className="news-card3-img" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
+        {!capa && <Newspaper size={22} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
+      </div>
+      <div className="news-card3-body">
+        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        <h3>{n.titulo}</h3>
+        {href && <span className="news-read-more">Ler mais <ArrowRight size={13} /></span>}
+      </div>
+    </article>
+  )
+}
+
+function NewsCard2H({ n }: { n: Noticia }) {
+  const capa = urlForImage(n.capa)
+  const href = n.slug ? `#noticia/${n.slug}` : undefined
+  const go = () => href && (window.location.hash = href.slice(1))
+  return (
+    <article
+      className={`news-card2h${href ? ' news-card--link' : ''}`}
+      onClick={href ? go : undefined}
+      role={href ? 'button' : undefined}
+      tabIndex={href ? 0 : undefined}
+      onKeyDown={href ? (e) => e.key === 'Enter' && go() : undefined}
+    >
+      <div className="news-card2h-img" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
+        {!capa && <Newspaper size={18} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
+      </div>
+      <div className="news-card2h-body">
+        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+        <h3>{n.titulo}</h3>
+      </div>
+    </article>
+  )
+}
+
 function Noticias() {
   const [noticias, setNoticias] = useState<Noticia[]>(NOTICIAS_FALLBACK)
 
   useEffect(() => {
     let active = true
     getNoticias().then((n) => active && setNoticias(n))
-    return () => {
-      active = false
-    }
+    return () => { active = false }
   }, [])
 
   if (!noticias.length) return null
+
+  const hero = noticias[0]
+  const heroImg = urlForImage(hero.capa)
+  const heroHref = hero.slug ? `#noticia/${hero.slug}` : undefined
+  const middle = noticias.slice(1, 4)
+  const bottom = noticias.slice(4, 6)
 
   return (
     <section className="section section-alt" id="noticias">
@@ -572,33 +623,45 @@ function Noticias() {
           </div>
         </Reveal>
 
-        <div className="news-grid">
-          {noticias.map((n, i) => {
-            const capa = urlForImage(n.capa)
-            const href = n.slug ? `#noticia/${n.slug}` : undefined
-            return (
-              <Reveal key={n._id} delay={i * 0.1}>
-                <article
-                  className={`news-card${href ? ' news-card--link' : ''}`}
-                  onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
-                  role={href ? 'button' : undefined}
-                  tabIndex={href ? 0 : undefined}
-                  onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
-                >
-                  <div className="news-media" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
-                    {!capa && <Newspaper size={28} strokeWidth={1.5} />}
-                  </div>
-                  <div className="news-body">
-                    {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-                    <h3>{n.titulo}</h3>
-                    {n.resumo && <p>{n.resumo}</p>}
-                    {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
-                  </div>
-                </article>
-              </Reveal>
-            )
-          })}
-        </div>
+        <Reveal>
+          <article
+            className={`news-hero${heroHref ? ' news-card--link' : ''}`}
+            onClick={heroHref ? () => { window.location.hash = heroHref.slice(1) } : undefined}
+            role={heroHref ? 'button' : undefined}
+            tabIndex={heroHref ? 0 : undefined}
+            onKeyDown={heroHref ? (e) => e.key === 'Enter' && (window.location.hash = heroHref!.slice(1)) : undefined}
+          >
+            <div className="news-hero-bg" style={heroImg ? { backgroundImage: `url(${heroImg})` } : undefined} />
+            <div className="news-hero-overlay" />
+            <div className="news-hero-content">
+              {hero.data && <span className="news-date" style={{ color: 'rgba(255,255,255,0.65)' }}>{formatDataLonga(hero.data)}</span>}
+              <h3>{hero.titulo}</h3>
+              {hero.resumo && <p>{hero.resumo}</p>}
+              {heroHref && <span className="news-read-more" style={{ color: '#fff', opacity: 0.85 }}>Ler notícia completa <ArrowRight size={13} /></span>}
+            </div>
+          </article>
+        </Reveal>
+
+        {middle.length > 0 && (
+          <div className="news-grid3">
+            {middle.map((n, i) => (
+              <Reveal key={n._id} delay={i * 0.08}><NewsCard3 n={n} /></Reveal>
+            ))}
+          </div>
+        )}
+
+        {bottom.length > 0 && (
+          <>
+            <div className="news-divider">
+              <span>Mais notícias</span>
+            </div>
+            <div className="news-grid2">
+              {bottom.map((n, i) => (
+                <Reveal key={n._id} delay={i * 0.08}><NewsCard2H n={n} /></Reveal>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </section>
   )
