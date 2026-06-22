@@ -365,6 +365,7 @@ html {
 .inst-item-alt .inst-inner { direction: rtl; }
 .inst-item-alt .inst-inner > * { direction: ltr; }
 .inst-foto-wrap { width: 100%; }
+.inst-foto-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; display: block; }
 .inst-foto-placeholder { width: 100%; aspect-ratio: 4/3; background: rgba(10,39,66,0.06); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(10,39,66,0.15); }
 .inst-foto-label { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); opacity: 0.6; }
 .inst-foto-label span { font-size: 13px; }

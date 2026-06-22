@@ -185,6 +185,79 @@ export function formatDataHora(iso?: string): string {
   return `${dia}, ${hora}`
 }
 
+/* ===========================================================================
+ * Instalações
+ * ======================================================================== */
+
+export interface Instalacao {
+  _id: string
+  titulo: string
+  ordem?: number
+  texto?: string
+  foto?: SanityImageSource
+  ctaLabel?: string
+  ctaUrl?: string
+}
+
+const INSTALACOES_QUERY = `*[_type == "instalacao"] | order(ordem asc){
+  _id, titulo, ordem, texto, foto, ctaLabel, ctaUrl
+}`
+
+export const INSTALACOES_FALLBACK: Instalacao[] = [
+  { _id: 'fi-1', titulo: 'Piscina', texto: 'É um lugar especial para o associado que queira nadar, participar de uma hidroginástica, estar no convívio de amigos e familiares.' },
+  { _id: 'fi-2', titulo: 'Recanto do Almirante', texto: 'Com uma vista fantástica, este aconchegante espaço torna-se uma parada obrigatória. O lounge deck possui wi-fi.' },
+  { _id: 'fi-3', titulo: 'Salão de Jogos', texto: 'Contém 2 mesas de sinuca e diversas opções de jogos como baralho, dominó e xadrez.' },
+  { _id: 'fi-4', titulo: 'Churrasqueiras', texto: 'As churrasqueiras são duas, localizadas em espaços interessantes.', ctaLabel: 'Agendar churrasqueira', ctaUrl: 'https://icb.areadosocio.com.br' },
+  { _id: 'fi-5', titulo: 'Salão de Festas', texto: 'O Clube dispõe de dois salões com capacidade para 400 e 250 pessoas, respectivamente.' },
+]
+
+export async function getInstalacoes(): Promise<Instalacao[]> {
+  if (!sanityConfigured || !sanityClient) return INSTALACOES_FALLBACK
+  try {
+    const data = await sanityClient.fetch<Instalacao[]>(INSTALACOES_QUERY)
+    return data.length ? data : INSTALACOES_FALLBACK
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar instalações.', err)
+    return INSTALACOES_FALLBACK
+  }
+}
+
+/* ===========================================================================
+ * Regatas
+ * ======================================================================== */
+
+export interface Regata {
+  _id: string
+  titulo: string
+  categoria?: string
+  classes?: string
+  data: string
+  local?: string
+  inscricoes?: string
+}
+
+const REGATAS_QUERY = `*[_type == "regata"] | order(data asc){
+  _id, titulo, categoria, classes, data, local, inscricoes
+}`
+
+export const REGATAS_FALLBACK: Regata[] = [
+  { _id: 'fr-1', titulo: 'Interclubes de Niterói', categoria: 'Vela', classes: 'ILCA 4 · ILCA 6 · Optimist', data: '2026-06-28', inscricoes: 'https://regatas.icb.org.br' },
+  { _id: 'fr-2', titulo: '3.º Campeonato Interclube — Vela', categoria: 'Vela', classes: 'Snipe · Laser · Optimist', data: '2026-08-15', inscricoes: 'https://regatas.icb.org.br' },
+  { _id: 'fr-3', titulo: 'Regata da Primavera', categoria: 'Vela', classes: 'Todas as classes', data: '2026-09-21', inscricoes: 'https://regatas.icb.org.br' },
+  { _id: 'fr-4', titulo: 'Copa ICB de Fim de Ano', categoria: 'Vela', classes: 'ILCA · Snipe · ORC', data: '2026-11-29', inscricoes: 'https://regatas.icb.org.br' },
+]
+
+export async function getRegatas(): Promise<Regata[]> {
+  if (!sanityConfigured || !sanityClient) return REGATAS_FALLBACK
+  try {
+    const data = await sanityClient.fetch<Regata[]>(REGATAS_QUERY)
+    return data.length ? data : REGATAS_FALLBACK
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar regatas.', err)
+    return REGATAS_FALLBACK
+  }
+}
+
 export function formatDataLonga(iso?: string): string {
   if (!iso) return ''
   return parseData(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
