@@ -661,9 +661,9 @@ function EventoDetalhe({ slug }: { slug: string }) {
   useEffect(() => {
     let active = true
     setLoading(true)
-    getEvento(slug).then((e) => {
-      if (active) { setEvento(e); setLoading(false) }
-    })
+    getEvento(slug)
+      .then((e) => { if (active) { setEvento(e); setLoading(false) } })
+      .catch(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [slug])
 
@@ -729,9 +729,9 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
   useEffect(() => {
     let active = true
     setLoading(true)
-    getNoticia(slug).then((n) => {
-      if (active) { setNoticia(n); setLoading(false) }
-    })
+    getNoticia(slug)
+      .then((n) => { if (active) { setNoticia(n); setLoading(false) } })
+      .catch(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [slug])
 
@@ -1349,7 +1349,6 @@ function VelasRegatas() {
     return () => { active = false }
   }, [])
 
-  const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero */}
@@ -1411,7 +1410,7 @@ function VelasRegatas() {
                   <div className="naut-regata-body">
                     <div className="naut-regata-titulo">{r.titulo}</div>
                     <div className="naut-regata-meta">
-                      <span>{fmt(r.data)}</span>
+                      <span>{formatDataLonga(r.data)}</span>
                       {r.classes && <><span className="naut-dot">·</span><span>{r.classes}</span></>}
                     </div>
                   </div>
@@ -1574,7 +1573,6 @@ const categoryCores: Record<string, string> = {
 }
 
 function EventoCard(ev: Evento) {
-  const fmt = (d: string) => new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
   const cor = categoryCores[ev.categoria] ?? categoryCores.default
   const href = ev.slug ? `#evento/${ev.slug}` : undefined
   return (
@@ -1587,7 +1585,7 @@ function EventoCard(ev: Evento) {
     >
       <div className="evcal-card-header" style={{ background: cor }}>
         <span className="evcal-cat">{ev.categoria}</span>
-        {ev.data && <div className="evcal-data">{fmt(ev.data)}</div>}
+        {ev.data && <div className="evcal-data">{formatDataCurta(ev.data)}</div>}
       </div>
       <div className="evcal-card-body">
         <h3 className="evcal-titulo">{ev.titulo}</h3>

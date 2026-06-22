@@ -202,14 +202,6 @@ export function formatDataCurta(iso?: string): string {
   return parseData(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '')
 }
 
-export function formatDataHora(iso?: string): string {
-  if (!iso) return ''
-  const d = parseData(iso)
-  const dia = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '')
-  const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-  return `${dia}, ${hora}`
-}
-
 /* ===========================================================================
  * Instalações
  * ======================================================================== */
