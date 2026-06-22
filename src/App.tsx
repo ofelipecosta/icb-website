@@ -159,6 +159,10 @@ function AddToCalendar({ ev, iconOnly }: { ev: Evento; iconOnly?: boolean }) {
 }
 
 /** Props de link que tratam URLs externas (http/https) vs internas/mailto. */
+function stripEmoji(s: string): string {
+  return s.replace(/[\u{1F000}-\u{1FFFF}]|[\u{2600}-\u{27BF}]|[\u{FE00}-\u{FE0F}]|\u{200D}/gu, '').replace(/\s+/g, ' ').trim()
+}
+
 function linkProps(url?: string) {
   const href = url || '#'
   const external = /^https?:\/\//i.test(href)
@@ -561,7 +565,7 @@ function NewsCard3({ n }: { n: Noticia }) {
       </div>
       <div className="news-card3-body">
         {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-        <h3>{n.titulo}</h3>
+        <h3>{stripEmoji(n.titulo)}</h3>
         {href && <span className="news-read-more">Ler mais <ArrowRight size={13} /></span>}
       </div>
     </article>
@@ -585,7 +589,7 @@ function NewsCard2H({ n }: { n: Noticia }) {
       </div>
       <div className="news-card2h-body">
         {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-        <h3>{n.titulo}</h3>
+        <h3>{stripEmoji(n.titulo)}</h3>
       </div>
     </article>
   )
@@ -635,7 +639,7 @@ function Noticias() {
             <div className="news-hero-overlay" />
             <div className="news-hero-content">
               {hero.data && <span className="news-date" style={{ color: 'rgba(255,255,255,0.65)' }}>{formatDataLonga(hero.data)}</span>}
-              <h3>{hero.titulo}</h3>
+              <h3>{stripEmoji(hero.titulo)}</h3>
               {hero.resumo && <p>{hero.resumo}</p>}
               {heroHref && <span className="news-read-more" style={{ color: '#fff', opacity: 0.85 }}>Ler notícia completa <ArrowRight size={13} /></span>}
             </div>
@@ -708,8 +712,8 @@ function TodasNoticias() {
                     </div>
                     <div className="news-body">
                       {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-                      <h3>{n.titulo}</h3>
-                      {n.resumo && <p>{n.resumo}</p>}
+                      <h3>{stripEmoji(n.titulo)}</h3>
+                      {n.resumo && <p>{stripEmoji(n.resumo)}</p>}
                       {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
                     </div>
                   </article>
