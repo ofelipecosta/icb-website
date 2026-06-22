@@ -637,9 +637,9 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
 
 const WA_CONTACTS = [
   { label: 'Secretaria Social', number: '5521985564487' },
-  { label: 'Secretaria Náutica', number: '5521000000001' },
-  { label: 'Financeiro',         number: '5521000000002' },
-  { label: 'Eventos',            number: '5521000000003' },
+  { label: 'Secretaria Náutica', number: '5521985564489' },
+  { label: 'Financeiro',         number: '5521985564485' },
+  { label: 'Eventos',            number: '5521973303932' },
 ]
 
 function WhatsAppFloat() {
