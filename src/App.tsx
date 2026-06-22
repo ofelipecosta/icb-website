@@ -204,6 +204,7 @@ const navLinks = [
     ],
   },
   { href: '#eventos', label: 'Eventos' },
+  { href: '#noticias', label: 'Notícias' },
   { href: '#contato', label: 'Contato' },
 ]
 
