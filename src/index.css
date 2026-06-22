@@ -749,6 +749,7 @@ html {
 
 /* ===== Notícias ===== */
 .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.news-grid--full { grid-template-columns: repeat(3, 1fr); }
 .news-card {
   display: flex; flex-direction: column;
   background: var(--cream);

@@ -56,6 +56,10 @@ const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
   _id, titulo, data, resumo, capa, "slug": slug.current
 }`
 
+const TODAS_NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc){
+  _id, titulo, data, resumo, capa, "slug": slug.current
+}`
+
 const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]{
   _id, titulo, data, resumo, capa, "slug": slug.current, corpo
 }`
@@ -150,6 +154,17 @@ export async function getNoticia(slug: string): Promise<Noticia | null> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar notícia.', err)
     return null
+  }
+}
+
+export async function getTodasNoticias(): Promise<Noticia[]> {
+  if (!sanityConfigured || !sanityClient) return NOTICIAS_FALLBACK
+  try {
+    const data = await sanityClient.fetch<Noticia[]>(TODAS_NOTICIAS_QUERY)
+    return data.length ? data : NOTICIAS_FALLBACK
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar notícias.', err)
+    return NOTICIAS_FALLBACK
   }
 }
 

@@ -30,6 +30,7 @@ import {
   getEvento,
   getNoticias,
   getNoticia,
+  getTodasNoticias,
   getInstalacoes,
   getRegatas,
   formatDataCurta,
@@ -558,6 +559,9 @@ function Noticias() {
               <div className="eyebrow">Fique por dentro</div>
               <h2>Últimas notícias</h2>
             </div>
+            <a className="section-link" href="#noticias">
+              Ver todas as notícias <ArrowRight size={15} />
+            </a>
           </div>
         </Reveal>
 
@@ -593,6 +597,61 @@ function Noticias() {
   )
 }
 
+
+function TodasNoticias() {
+  const [noticias, setNoticias] = useState<Noticia[]>(NOTICIAS_FALLBACK)
+
+  useEffect(() => {
+    let active = true
+    getTodasNoticias().then((n) => active && setNoticias(n))
+    return () => { active = false }
+  }, [])
+
+  return (
+    <main id="conteudo">
+      <div className="historia-hero">
+        <div className="historia-hero-overlay" />
+        <div className="container historia-hero-inner">
+          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Notícias</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(32px, 5.5vw, 58px)', color: '#fff', margin: '0 0 16px', lineHeight: 1.1 }}>Fique por <em style={{ fontStyle: 'italic', color: '#e8605a' }}>dentro</em></h1>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, maxWidth: '52ch', lineHeight: 1.75, margin: 0 }}>Novidades, comunicados e eventos do Iate Clube Brasileiro.</p>
+        </div>
+      </div>
+
+      <div className="section section-alt">
+        <div className="container">
+          <div className="news-grid news-grid--full">
+            {noticias.map((n, i) => {
+              const capa = urlForImage(n.capa)
+              const href = n.slug ? `#noticia/${n.slug}` : undefined
+              return (
+                <Reveal key={n._id} delay={(i % 3) * 0.08}>
+                  <article
+                    className={`news-card${href ? ' news-card--link' : ''}`}
+                    onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
+                    role={href ? 'button' : undefined}
+                    tabIndex={href ? 0 : undefined}
+                    onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
+                  >
+                    <div className="news-media" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
+                      {!capa && <Newspaper size={28} strokeWidth={1.5} />}
+                    </div>
+                    <div className="news-body">
+                      {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
+                      <h3>{n.titulo}</h3>
+                      {n.resumo && <p>{n.resumo}</p>}
+                      {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
+                    </div>
+                  </article>
+                </Reveal>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
 
 function EventoDetalhe({ slug }: { slug: string }) {
   const [evento, setEvento] = useState<Evento | null>(null)
@@ -1752,7 +1811,7 @@ function ContatoPage() {
 // Páginas que trocam o conteúdo inteiro (não são âncoras da home)
 const SUB_PAGES = new Set([
   '#administracao', '#ouvidoria', '#documentos', '#historia',
-  '#identidade', '#instalacoes', '#regatas', '#secretaria-nautica', '#eventos', '#contato',
+  '#identidade', '#instalacoes', '#regatas', '#secretaria-nautica', '#eventos', '#contato', '#noticias',
 ])
 
 function isNoticiaPage(hash: string) {
@@ -1807,7 +1866,7 @@ function App() {
   const isRegatas = page === '#regatas'
   const isSecNaut = page === '#secretaria-nautica'
   const isEventos = page === '#eventos'
-
+  const isNoticias = page === '#noticias'
 
   const noticiaSlug = isNoticiaPage(page) ? page.replace('#noticia/', '') : null
   const eventoSlug = isEventoPage(page) ? page.replace('#evento/', '') : null
@@ -1816,7 +1875,8 @@ function App() {
     eventoSlug ? <EventoDetalhe slug={eventoSlug} /> :
     isAdm ? <Administracao /> : isOuv ? <ContatoPage /> : isDocs ? <DocumentosOficiais /> : isContato ? <ContatoPage /> :
     isHist ? <NossaHistoria /> : isIdfi ? <IdentidadeFilosofia /> : isInst ? <Instalacoes /> :
-    isRegatas ? <VelasRegatas /> : isSecNaut ? <SecretariaNautica /> : isEventos ? <Eventos /> : null
+    isRegatas ? <VelasRegatas /> : isSecNaut ? <SecretariaNautica /> : isEventos ? <Eventos /> :
+    isNoticias ? <TodasNoticias /> : null
 
   return (
     <>
