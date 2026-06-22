@@ -597,6 +597,7 @@ html {
 .ev-card-b-photo { height: 260px; background-size: cover; background-position: center; }
 .ev-card-b-body { padding: 30px 32px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .ev-card-b-header { display: flex; align-items: center; justify-content: space-between; }
+.ev-card-b-icons { display: flex; align-items: center; gap: 2px; }
 .ev-card-b-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); border: 1px solid rgba(184,58,58,0.35); border-radius: 4px; padding: 3px 10px; width: fit-content; }
 .ev-card-b-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 .ev-card-b-title { font-family: var(--display); font-size: 22px; line-height: 1.2; color: var(--ink); margin-top: 2px; }

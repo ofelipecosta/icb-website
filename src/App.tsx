@@ -104,7 +104,7 @@ function ShareButton({ title, url }: { title: string; url: string }) {
   )
 }
 
-function AddToCalendar({ ev }: { ev: Evento }) {
+function AddToCalendar({ ev, iconOnly }: { ev: Evento; iconOnly?: boolean }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
@@ -119,8 +119,14 @@ function AddToCalendar({ ev }: { ev: Evento }) {
 
   return (
     <div className="cal-wrap" ref={ref}>
-      <button className="cal-btn" onClick={() => setOpen((o) => !o)} aria-label="Adicionar à agenda">
-        <CalendarPlus size={15} /> Adicionar à agenda
+      <button
+        className={iconOnly ? 'share-btn' : 'cal-btn'}
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Adicionar à agenda"
+        title="Adicionar à agenda"
+      >
+        <CalendarPlus size={15} />
+        {!iconOnly && ' Adicionar à agenda'}
       </button>
       {open && (
         <div className="cal-dropdown">
@@ -482,20 +488,20 @@ function EventosCards() {
                 <div className="ev-card-b-body">
                   <div className="ev-card-b-header">
                     {ev.categoria && <span className="ev-card-b-tag">{ev.categoria}</span>}
-                    <ShareButton title={ev.titulo} url={`#eventos`} />
+                    <div className="ev-card-b-icons">
+                      {ev.data && <AddToCalendar ev={ev} iconOnly />}
+                      <ShareButton title={ev.titulo} url={`#eventos`} />
+                    </div>
                   </div>
                   <h3 className="ev-card-b-title">{ev.titulo}</h3>
                   <p className="ev-card-b-meta">
                     {[ev.local, formatDataCurta(ev.data)].filter(Boolean).join(' · ')}
                   </p>
-                  <div className="ev-card-b-actions">
-                    {ev.linkUrl && (
-                      <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)}>
-                        {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
-                      </a>
-                    )}
-                    {ev.data && <AddToCalendar ev={ev} />}
-                  </div>
+                  {ev.linkUrl && (
+                    <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)}>
+                      {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
+                    </a>
+                  )}
                 </div>
               </motion.div>
             )
