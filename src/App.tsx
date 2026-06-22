@@ -39,16 +39,20 @@ import {
   type Documento,
   getInstalacoes,
   getRegatas,
+  getAvisos,
   formatDataCurta,
   formatDataLonga,
+  formatMesAno,
   type Evento,
   type Noticia,
   type Instalacao,
   type Regata,
+  type Aviso,
   EVENTOS_FALLBACK,
   NOTICIAS_FALLBACK,
   INSTALACOES_FALLBACK,
   REGATAS_FALLBACK,
+  AVISOS_FALLBACK,
 } from './lib/content'
 import { PortableText } from '@portabletext/react'
 import { urlForImage } from './lib/sanity'
@@ -1512,10 +1516,12 @@ function Instalacoes() {
 
 function VelasRegatas() {
   const [regatas, setRegatas] = useState<Regata[]>(REGATAS_FALLBACK)
+  const [avisos, setAvisos] = useState<Aviso[]>(AVISOS_FALLBACK)
 
   useEffect(() => {
     let active = true
     getRegatas().then((d) => active && setRegatas(d))
+    getAvisos().then((d) => active && setAvisos(d))
     return () => { active = false }
   }, [])
 
@@ -1579,26 +1585,25 @@ function VelasRegatas() {
       </div>
 
       {/* Avisos */}
-      <div style={{ background: 'var(--navy)', padding: 'clamp(40px,5vw,64px) 0' }}>
-        <div className="container" style={{ maxWidth: 900 }}>
-          <Reveal>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 24 }}>
-              <h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(22px, 3vw, 32px)', color: '#fff', margin: 0 }}>Avisos da Secretaria</h2>
-              <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', fontStyle: 'italic' }}>Atualizado pela Secretaria Náutica via CMS</span>
-            </div>
-            <div className="naut-avisos">
-              <div className="naut-aviso">
-                <div className="naut-aviso-data">Jun 2026</div>
-                <div className="naut-aviso-texto">A Secretaria Náutica informa que o serviço de descida e subida de embarcações opera de segunda a sexta, das 08h às 17h. Finais de semana e feriados sob consulta.</div>
+      {avisos.length > 0 && (
+        <div style={{ background: 'var(--navy)', padding: 'clamp(40px,5vw,64px) 0' }}>
+          <div className="container" style={{ maxWidth: 900 }}>
+            <Reveal>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 24 }}>
+                <h2 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(22px, 3vw, 32px)', color: '#fff', margin: 0 }}>Avisos da Secretaria</h2>
               </div>
-              <div className="naut-aviso">
-                <div className="naut-aviso-data">Mai 2026</div>
-                <div className="naut-aviso-texto">Vagas náuticas disponíveis para locação. Entre em contato com a Secretaria para informações sobre valores e disponibilidade.</div>
+              <div className="naut-avisos">
+                {avisos.map((a) => (
+                  <div key={a._id} className="naut-aviso">
+                    <div className="naut-aviso-data">{formatMesAno(a.data)}</div>
+                    <div className="naut-aviso-texto">{a.texto}</div>
+                  </div>
+                ))}
               </div>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
-      </div>
+      )}
     </main>
   )
 }

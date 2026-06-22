@@ -256,6 +256,14 @@ export function formatDataCurta(iso?: string): string {
   return parseData(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' }).replace('.', '')
 }
 
+const MESES_ABREV = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+
+export function formatMesAno(iso?: string): string {
+  if (!iso) return ''
+  const d = parseData(iso)
+  return `${MESES_ABREV[d.getMonth()]} ${d.getFullYear()}`
+}
+
 /* ===========================================================================
  * Instalações
  * ======================================================================== */
@@ -326,6 +334,36 @@ export async function getRegatas(): Promise<Regata[]> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar regatas.', err)
     return REGATAS_FALLBACK
+  }
+}
+
+/* ===========================================================================
+ * Avisos da Secretaria Náutica
+ * ======================================================================== */
+
+export interface Aviso {
+  _id: string
+  texto: string
+  data: string
+}
+
+const AVISOS_QUERY = `*[_type == "aviso"] | order(data desc){
+  _id, texto, data
+}`
+
+export const AVISOS_FALLBACK: Aviso[] = [
+  { _id: 'fa-1', data: '2026-06-01', texto: 'A Secretaria Náutica informa que o serviço de descida e subida de embarcações opera de segunda a sexta, das 08h às 17h. Finais de semana e feriados sob consulta.' },
+  { _id: 'fa-2', data: '2026-05-01', texto: 'Vagas náuticas disponíveis para locação. Entre em contato com a Secretaria para informações sobre valores e disponibilidade.' },
+]
+
+export async function getAvisos(): Promise<Aviso[]> {
+  if (!sanityConfigured || !sanityClient) return AVISOS_FALLBACK
+  try {
+    const data = await sanityClient.fetch<Aviso[]>(AVISOS_QUERY)
+    return data.length ? data : AVISOS_FALLBACK
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar avisos.', err)
+    return AVISOS_FALLBACK
   }
 }
 
