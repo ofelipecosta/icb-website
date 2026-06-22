@@ -519,10 +519,6 @@ html {
   background-size: cover;
   background-position: center 40%;
 }
-@media (max-width: 600px) {
-  .hero-bg { background-size: cover; background-position: 70% center; }
-  .hero-inner { padding-block: 56px 64px; }
-}
 .hero-bg::after {
   content: '';
   position: absolute; inset: 0;
