@@ -50,7 +50,7 @@ const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
  * Fallback (usado enquanto o Sanity não está configurado ou se a busca falhar)
  * ======================================================================== */
 
-const EVENTOS_FALLBACK: Evento[] = [
+export const EVENTOS_FALLBACK: Evento[] = [
   {
     _id: 'fb-1',
     titulo: 'Interclubes de Niterói',
@@ -83,7 +83,7 @@ const EVENTOS_FALLBACK: Evento[] = [
   },
 ]
 
-const NOTICIAS_FALLBACK: Noticia[] = [
+export const NOTICIAS_FALLBACK: Noticia[] = [
   {
     _id: 'fb-n1',
     titulo: 'Equipe do ICB conquista pódio no circuito estadual',

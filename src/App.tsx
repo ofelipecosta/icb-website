@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import comodoroeVice from '../imagens/comodoro_e_vice.png'
 import logoICB from '../imagens/Logo/Timão ICB PRETO.png'
 import logoICBBranco from '../imagens/Logo/Timão ICB BRANCO.png'
-import timao from '../imagens/Logo/timão.png'
+// import timao from '../imagens/Logo/timão.png'
 import aereo1 from '../imagens/tela principal/aero_nova_01.png'
 import aereo2 from '../imagens/tela principal/aero_nova_02.png'
 import aereo3 from '../imagens/tela principal/aero_nova_03.png'
@@ -13,33 +13,25 @@ import { motion, useReducedMotion } from 'motion/react'
 import {
   Sailboat,
   Anchor,
-  Waves,
-  Trophy,
-  PartyPopper,
   ArrowRight,
-  ArrowUpRight,
-  Ship,
-  Fish,
   Menu,
   X,
   MapPin,
-  Award,
   ChevronDown,
   Newspaper,
   CalendarPlus,
   Leaf,
   Heart,
-  BookOpen,
-  Shield,
 } from 'lucide-react'
 import {
   getEventos,
   getNoticias,
   formatDataCurta,
-  formatDataHora,
   formatDataLonga,
   type Evento,
   type Noticia,
+  EVENTOS_FALLBACK,
+  NOTICIAS_FALLBACK,
 } from './lib/content'
 import { urlForImage } from './lib/sanity'
 
@@ -172,20 +164,6 @@ const navLinks = [
   { href: '#contato', label: 'Contato' },
 ]
 
-const modalidades = [
-  { icon: Sailboat, nome: 'Vela & Regatas' },
-  { icon: Waves, nome: 'Natação' },
-  { icon: Ship, nome: 'Canoagem' },
-  { icon: Trophy, nome: 'Sinuca' },
-  { icon: Fish, nome: 'Pesca & Biriba' },
-]
-
-const stats = [
-  { num: '1906', label: 'Ano de fundação' },
-  { num: '120', label: 'Anos de história' },
-  { num: '5', label: 'Modalidades ativas' },
-  { num: '1.º', label: 'Clube de iatismo do Brasil', accent: true },
-]
 
 function Header({ currentPage }: { currentPage?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -369,28 +347,6 @@ function Hero() {
   )
 }
 
-function Stats() {
-  const reduce = useReducedMotion()
-  return (
-    <section className="stats">
-      <motion.div
-        className="container stats-grid"
-        variants={stagger}
-        initial={reduce ? false : 'hidden'}
-        whileInView="show"
-        viewport={{ once: true }}
-      >
-        {stats.map((s) => (
-          <motion.div key={s.label} className="stat-card" variants={fadeUp} transition={{ duration: 0.5 }}>
-            <div className={`stat-num${s.accent ? ' accent' : ''}`}>{s.num}</div>
-            <div className="stat-label">{s.label}</div>
-          </motion.div>
-        ))}
-      </motion.div>
-    </section>
-  )
-}
-
 function OClube() {
   return (
     <section className="about" id="clube">
@@ -424,18 +380,10 @@ function OClube() {
   )
 }
 
-function metaLine(local?: string, data?: string) {
-  return [local, formatDataHora(data)].filter(Boolean).join(' · ')
-}
 
-const eventosFallback: Evento[] = [
-  { _id: 'f1', titulo: '3.º Campeonato Interclube — Vela', categoria: 'Vela', local: 'Trapiche ICB', data: '2025-11-08', destaque: true },
-  { _id: 'f2', titulo: 'Torneio Interclube de Natação', categoria: 'Natação', local: 'Piscina ICB', data: '2025-10-11', destaque: false },
-  { _id: 'f3', titulo: '3.º Campeonato Interclube — Canoagem', categoria: 'Canoagem', local: 'Baía de Guanabara', data: '2025-12-06', destaque: false },
-]
 
 function EventosCards() {
-  const [eventos, setEventos] = useState<Evento[]>([])
+  const [eventos, setEventos] = useState<Evento[]>(EVENTOS_FALLBACK)
 
   useEffect(() => {
     let active = true
@@ -443,7 +391,7 @@ function EventosCards() {
     return () => { active = false }
   }, [])
 
-  const cards = (eventos.length ? eventos : eventosFallback).slice(0, 3)
+  const cards = eventos.slice(0, 3)
 
   return (
     <section className="ev-cards-section">
@@ -495,90 +443,8 @@ function EventosCards() {
   )
 }
 
-function EventosHome() {
-  const [eventos, setEventos] = useState<Evento[]>([])
-
-  useEffect(() => {
-    let active = true
-    getEventos().then((e) => active && setEventos(e))
-    return () => {
-      active = false
-    }
-  }, [])
-
-  if (!eventos.length) return null
-
-  const feature = eventos.find((e) => e.destaque) ?? eventos[0]
-  const side = eventos.filter((e) => e._id !== feature._id).slice(0, 2)
-  const featureImg = urlForImage(feature.imagem)
-
-  return (
-    <section className="section" id="eventos">
-      <div className="container">
-        <Reveal>
-          <div className="section-head">
-            <div>
-              <div className="eyebrow">Agenda do clube</div>
-              <h2>Próximas regatas e eventos</h2>
-            </div>
-            <a className="section-link" href="https://regatas.icb.org.br" target="_blank" rel="noreferrer">
-              Calendário de regatas <ArrowRight size={15} />
-            </a>
-          </div>
-        </Reveal>
-
-        <div className="bento">
-          <Reveal>
-            <motion.div
-              className="event-feature"
-              whileHover={{ y: -4 }}
-              style={featureImg ? { backgroundImage: `url(${featureImg})` } : undefined}
-              data-has-image={featureImg ? 'true' : undefined}
-            >
-              {!featureImg && <div className="hero-stripes" />}
-              <span className="event-pill">
-                <Trophy size={14} /> {[feature.categoria, formatDataCurta(feature.data)].filter(Boolean).join(' · ')}
-              </span>
-              <div>
-                <h3>{feature.titulo}</h3>
-                {(feature.detalhe || feature.local) && (
-                  <p className="ev-meta">{feature.detalhe || feature.local}</p>
-                )}
-                {feature.linkUrl && (
-                  <a className="btn btn-light" {...linkProps(feature.linkUrl)}>
-                    {feature.ctaLabel || 'Saiba mais'} <ArrowRight size={16} />
-                  </a>
-                )}
-              </div>
-            </motion.div>
-          </Reveal>
-
-          <div className="event-side">
-            {side.map((ev, i) => (
-              <Reveal key={ev._id} delay={0.1 + i * 0.1}>
-                <div className="event-card">
-                  <div>
-                    <span className="event-tag">{ev.categoria}</span>
-                    <h3>{ev.titulo}</h3>
-                    {metaLine(ev.local, ev.data) && <p className="ev-meta">{metaLine(ev.local, ev.data)}</p>}
-                  </div>
-                  {ev.linkUrl && (
-                    <a className="ev-cta" {...linkProps(ev.linkUrl)}>
-                      {ev.ctaLabel || 'Saiba mais'} <ArrowUpRight size={15} />
-                    </a>
-                  )}
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function Noticias() {
-  const [noticias, setNoticias] = useState<Noticia[]>([])
+  const [noticias, setNoticias] = useState<Noticia[]>(NOTICIAS_FALLBACK)
 
   useEffect(() => {
     let active = true
@@ -621,38 +487,6 @@ function Noticias() {
             )
           })}
         </div>
-      </div>
-    </section>
-  )
-}
-
-function Modalidades() {
-  const reduce = useReducedMotion()
-  return (
-    <section className="section" id="nautica">
-      <div className="container">
-        <Reveal>
-          <div className="section-head">
-            <div>
-              <div className="eyebrow">Esporte & lazer</div>
-              <h2>Nossas modalidades</h2>
-            </div>
-          </div>
-        </Reveal>
-        <motion.div
-          className="mod-grid"
-          variants={stagger}
-          initial={reduce ? false : 'hidden'}
-          whileInView="show"
-          viewport={{ once: true, margin: '-60px' }}
-        >
-          {modalidades.map(({ icon: Icon, nome }) => (
-            <motion.div key={nome} className="mod-card" variants={fadeUp} transition={{ duration: 0.5 }}>
-              <div className="mod-ico"><Icon size={28} strokeWidth={1.5} /></div>
-              <h3>{nome}</h3>
-            </motion.div>
-          ))}
-        </motion.div>
       </div>
     </section>
   )
@@ -792,74 +626,6 @@ function Administracao() {
                 </div>
               ))}
             </div>
-          </div>
-        </Reveal>
-      </div>
-    </main>
-  )
-}
-
-function Ouvidoria() {
-  const [sent, setSent] = useState(false)
-  const [form, setForm] = useState({ nome: '', email: '', mensagem: '' })
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const body = encodeURIComponent(`Nome: ${form.nome}\nEmail: ${form.email}\n\n${form.mensagem}`)
-    window.location.href = `mailto:ouvidoria@icb.org.br?subject=Ouvidoria ICB&body=${body}`
-    setSent(true)
-  }
-
-  return (
-    <main id="conteudo" className="section" style={{ paddingTop: 120 }}>
-      <div className="container" style={{ maxWidth: 720 }}>
-        <Reveal>
-          <div className="eyebrow">O Clube</div>
-          <h2 style={{ marginBottom: 16 }}>Ouvidoria</h2>
-          <p style={{ fontSize: 17, color: 'var(--muted)', lineHeight: 1.75, marginBottom: 48 }}>
-            A Ouvidoria do Iate Clube Brasileiro é o canal oficial para registro de sugestões, elogios, reclamações e denúncias. Todas as mensagens são tratadas com sigilo e encaminhadas à Diretoria.
-          </p>
-        </Reveal>
-
-        <Reveal>
-          <div className="ouv-grid">
-            <div className="ouv-info">
-              <h3>Contato direto</h3>
-              <p>Prefere enviar um e-mail diretamente?</p>
-              <a className="btn btn-outline" href="mailto:ouvidoria@icb.org.br">
-                ouvidoria@icb.org.br <ArrowRight size={15} />
-              </a>
-              <div className="ouv-aviso">
-                <strong>Sigilo garantido</strong>
-                <span>Sua identificação é protegida e a mensagem chega exclusivamente à Diretoria.</span>
-              </div>
-            </div>
-
-            <form className="ouv-form" onSubmit={handleSubmit}>
-              {sent ? (
-                <div className="ouv-success">
-                  Mensagem preparada — verifique seu cliente de e-mail para concluir o envio.
-                </div>
-              ) : (
-                <>
-                  <div className="ouv-field">
-                    <label htmlFor="ouv-nome">Nome completo</label>
-                    <input id="ouv-nome" type="text" required placeholder="Seu nome" value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} />
-                  </div>
-                  <div className="ouv-field">
-                    <label htmlFor="ouv-email">E-mail</label>
-                    <input id="ouv-email" type="email" required placeholder="seu@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
-                  </div>
-                  <div className="ouv-field">
-                    <label htmlFor="ouv-msg">Mensagem</label>
-                    <textarea id="ouv-msg" required rows={6} placeholder="Descreva sua sugestão, elogio ou reclamação..." value={form.mensagem} onChange={e => setForm(f => ({ ...f, mensagem: e.target.value }))} />
-                  </div>
-                  <button className="btn btn-primary" type="submit" style={{ width: '100%' }}>
-                    Enviar mensagem <ArrowRight size={16} />
-                  </button>
-                </>
-              )}
-            </form>
           </div>
         </Reveal>
       </div>
@@ -1342,7 +1108,7 @@ const servicosNautica = [
 ]
 
 const iconNaut = (id: string) => {
-  const map: Record<string, JSX.Element> = {
+  const map: Record<string, React.ReactNode> = {
     anchor: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>,
     ship: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.2.7 4.3 1.62 6"/><path d="M12 10V2"/><path d="M12 2 8 6"/><path d="M12 2l4 4"/></svg>,
     warehouse: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z"/><path d="M6 18h12"/><path d="M6 14h12"/><rect width="8" height="8" x="8" y="14"/></svg>,
