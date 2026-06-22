@@ -480,18 +480,22 @@ function EventosCards() {
                   <div className="ev-card-b-photo" style={{ backgroundImage: `url(${img})` }} />
                 )}
                 <div className="ev-card-b-body">
-                  {ev.categoria && <span className="ev-card-b-tag">{ev.categoria}</span>}
+                  <div className="ev-card-b-header">
+                    {ev.categoria && <span className="ev-card-b-tag">{ev.categoria}</span>}
+                    <ShareButton title={ev.titulo} url={`#eventos`} />
+                  </div>
                   <h3 className="ev-card-b-title">{ev.titulo}</h3>
                   <p className="ev-card-b-meta">
                     {[ev.local, formatDataCurta(ev.data)].filter(Boolean).join(' · ')}
                   </p>
-                  {ev.linkUrl && (
-                    <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)}>
-                      {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
-                    </a>
-                  )}
-                  {ev.data && <AddToCalendar ev={ev} />}
-                  <ShareButton title={ev.titulo} url={`#eventos`} />
+                  <div className="ev-card-b-actions">
+                    {ev.linkUrl && (
+                      <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)}>
+                        {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
+                      </a>
+                    )}
+                    {ev.data && <AddToCalendar ev={ev} />}
+                  </div>
                 </div>
               </motion.div>
             )
