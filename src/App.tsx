@@ -98,9 +98,8 @@ function ShareButton({ title, url }: { title: string; url: string }) {
   }
 
   return (
-    <button className="share-btn" onClick={handleShare} aria-label="Compartilhar">
+    <button className="share-btn" onClick={handleShare} aria-label={copied ? 'Link copiado!' : 'Compartilhar'} title={copied ? 'Link copiado!' : 'Compartilhar'}>
       {copied ? <Check size={15} /> : <Share2 size={15} />}
-      {copied ? 'Link copiado!' : 'Compartilhar'}
     </button>
   )
 }
