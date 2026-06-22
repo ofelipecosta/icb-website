@@ -729,9 +729,19 @@ const WA_CONTACTS = [
 
 function WhatsAppFloat() {
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
 
   return (
-    <div className="wa-float">
+    <div className="wa-float" ref={ref}>
       {open && (
         <div className="wa-menu">
           <div className="wa-menu-title">Fale conosco</div>
