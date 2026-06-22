@@ -402,7 +402,7 @@ function EventosCards() {
               <div className="eyebrow">Agenda do clube</div>
               <h2>Próximos Eventos</h2>
             </div>
-            <a className="section-link" href="https://regatas.icb.org.br" target="_blank" rel="noreferrer">
+            <a className="section-link" href="#eventos">
               Ver calendário completo <ArrowRight size={15} />
             </a>
           </div>
