@@ -1740,21 +1740,13 @@ const TelIcon = () => <svg width="17" height="17" viewBox="0 0 24 24" fill="none
 
 const departamentos = [
   {
-    nome: 'Secretaria Geral',
+    nome: 'Secretaria Social',
     desc: 'Atendimento geral, associação e informações sobre o clube.',
     cor: 'var(--navy)',
     contatos: [
       { tipo: 'tel' as const, label: '(21) 2714-8252', href: 'tel:+552127148252' },
       { tipo: 'whatsapp' as const, label: '(21) 98556-4487', href: 'https://wa.me/5521985564487' },
       { tipo: 'email' as const, label: 'secretaria@icb.org.br', href: 'mailto:secretaria@icb.org.br' },
-    ],
-  },
-  {
-    nome: 'Comodoria',
-    desc: 'Contato direto com a Comodoria do clube.',
-    cor: '#1a3f6b',
-    contatos: [
-      { tipo: 'email' as const, label: 'comodoria@icb.org.br', href: 'mailto:comodoria@icb.org.br' },
     ],
   },
   {
@@ -1767,21 +1759,29 @@ const departamentos = [
     ],
   },
   {
-    nome: 'Eventos',
-    desc: 'Salão de festas, eventos sociais e reservas.',
-    cor: '#2d5c4a',
-    contatos: [
-      { tipo: 'whatsapp' as const, label: '(21) 97330-3932', href: 'https://wa.me/5521973303932' },
-      { tipo: 'email' as const, label: 'salaodefestas@icb.org.br', href: 'mailto:salaodefestas@icb.org.br' },
-    ],
-  },
-  {
     nome: 'Financeiro',
     desc: 'Mensalidades, cobranças e assuntos financeiros.',
     cor: '#5c3a1a',
     contatos: [
       { tipo: 'whatsapp' as const, label: '(21) 98556-4485', href: 'https://wa.me/5521985564485' },
       { tipo: 'email' as const, label: 'financeiro@icb.org.br', href: 'mailto:financeiro@icb.org.br' },
+    ],
+  },
+  {
+    nome: 'Eventos',
+    desc: 'Salão de festas, eventos sociais e reservas.',
+    cor: '#2d5c4a',
+    contatos: [
+      { tipo: 'whatsapp' as const, label: '(21) 97370-3932', href: 'https://wa.me/5521973703932' },
+      { tipo: 'email' as const, label: 'salaodefestas@icb.org.br', href: 'mailto:salaodefestas@icb.org.br' },
+    ],
+  },
+  {
+    nome: 'Comodoria',
+    desc: 'Contato direto com a Comodoria do clube.',
+    cor: '#1a3f6b',
+    contatos: [
+      { tipo: 'email' as const, label: 'comodoria@icb.org.br', href: 'mailto:comodoria@icb.org.br' },
     ],
   },
   {
