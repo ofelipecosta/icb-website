@@ -597,7 +597,7 @@ html {
 .ev-card-b-photo { height: 260px; background-size: cover; background-position: center; }
 .ev-card-b-body { padding: 30px 32px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
 .ev-card-b-header { display: flex; align-items: center; justify-content: space-between; }
-.ev-card-b-icons { display: flex; align-items: center; gap: 2px; }
+.ev-card-b-icons { display: flex; align-items: center; gap: 0; }
 .ev-card-b-tag { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); border: 1px solid rgba(184,58,58,0.35); border-radius: 4px; padding: 3px 10px; width: fit-content; }
 .ev-card-b-actions { display: flex; align-items: center; gap: 12px; margin-top: 6px; flex-wrap: wrap; }
 .ev-card-b-title { font-family: var(--display); font-size: 22px; line-height: 1.2; color: var(--ink); margin-top: 2px; }
@@ -608,6 +608,7 @@ html {
 
 /* Add to calendar */
 .cal-wrap { position: relative; margin-top: 16px; border-top: 0.5px solid rgba(0,0,0,0.07); padding-top: 14px; }
+.ev-card-b-icons .cal-wrap { margin-top: 0; border-top: none; padding-top: 0; display: flex; align-items: center; }
 .cal-btn { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; color: var(--muted); background: none; border: 1px solid rgba(0,0,0,0.12); border-radius: 999px; padding: 6px 14px; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
 .cal-btn:hover { border-color: var(--brass); color: var(--brass); }
 .cal-dropdown { position: absolute; bottom: calc(100% + 8px); left: 0; background: var(--white); border: 0.5px solid rgba(0,0,0,0.1); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); min-width: 200px; overflow: hidden; z-index: 10; }
