@@ -333,6 +333,16 @@ function Hero() {
           </motion.div>
         </motion.div>
       </div>
+      <div className="hero-dots">
+        {heroSlides.map((_, i) => (
+          <button
+            key={i}
+            className={`hero-dot${i === current ? ' hero-dot--active' : ''}`}
+            onClick={() => setCurrent(i)}
+            aria-label={`Foto ${i + 1}`}
+          />
+        ))}
+      </div>
       <a className="hero-scrollcue" href="#clube" aria-label="Rolar para conhecer o clube">
         Explorar
         <motion.span
