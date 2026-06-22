@@ -703,7 +703,7 @@ function Footer() {
           <h4>Náutica</h4>
           <a href="#regatas">Velas e regatas</a>
           <a href="#secretaria-nautica">Secretaria náutica</a>
-          <a href="#eventos">Calendário</a>
+          <a href="#eventos">Eventos</a>
         </div>
         <div>
           <h4>Contato</h4>
