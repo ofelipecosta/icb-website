@@ -745,7 +745,7 @@ function EventoDetalhe({ slug }: { slug: string }) {
   const idx = nav.findIndex(n => n.slug === slug)
   const prev = idx > 0 ? nav[idx - 1] : null
   const next = idx >= 0 && idx < nav.length - 1 ? nav[idx + 1] : null
-  const goTo = (s: string) => { window.location.hash = `evento/${s}`; window.scrollTo(0, 0) }
+  const goTo = (s: string) => { window.location.hash = `evento/${s}` }
 
   return (
     <main id="conteudo" className="noticia-detalhe">
@@ -848,7 +848,7 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
   const prev = idx > 0 ? nav[idx - 1] : null
   const next = idx >= 0 && idx < nav.length - 1 ? nav[idx + 1] : null
 
-  const goTo = (s: string) => { window.location.hash = `noticia/${s}`; window.scrollTo(0, 0) }
+  const goTo = (s: string) => { window.location.hash = `noticia/${s}` }
 
   return (
     <main id="conteudo" className="noticia-detalhe">
@@ -1991,16 +1991,56 @@ function isEventoPage(hash: string) {
   return hash.startsWith('#evento/')
 }
 
+// Guarda a posição de scroll de cada página para restaurar ao voltar
+const scrollPositions = new Map<string, number>()
+
+// Restaura o scroll aguardando o conteúdo (carregado de forma assíncrona) crescer.
+// Cancela imediatamente se o usuário interagir, para nunca brigar com o scroll dele.
+function restoreScroll(target: number) {
+  let cancelled = false
+  const cancel = () => { cancelled = true; cleanup() }
+  const cleanup = () => {
+    window.removeEventListener('wheel', cancel)
+    window.removeEventListener('touchstart', cancel)
+    window.removeEventListener('keydown', cancel)
+  }
+  window.addEventListener('wheel', cancel, { passive: true })
+  window.addEventListener('touchstart', cancel, { passive: true })
+  window.addEventListener('keydown', cancel)
+
+  const start = performance.now()
+  const attempt = () => {
+    if (cancelled) return
+    window.scrollTo({ top: target, behavior: 'auto' })
+    if (Math.abs(window.scrollY - target) > 2 && performance.now() - start < 1500) {
+      requestAnimationFrame(attempt)
+    } else {
+      cleanup()
+    }
+  }
+  requestAnimationFrame(attempt)
+}
+
 function useCurrentPage() {
   const [page, setPage] = useState(() => window.location.hash)
   useEffect(() => {
     const handler = () => {
       const hash = window.location.hash
-      // Scroll ao topo apenas em trocas de subpágina
-      if (SUB_PAGES.has(hash) || SUB_PAGES.has(page) || isNoticiaPage(hash) || isNoticiaPage(page) || isEventoPage(hash) || isEventoPage(page)) {
+      // Salva a posição da página que estamos deixando (DOM ainda é o antigo)
+      scrollPositions.set(page, window.scrollY)
+
+      const saved = scrollPositions.get(hash)
+      const isSub = (h: string) => SUB_PAGES.has(h) || isNoticiaPage(h) || isEventoPage(h)
+
+      setPage(hash)
+
+      if (saved != null && saved > 0) {
+        // Voltando para uma página já visitada — restaura onde o usuário parou
+        restoreScroll(saved)
+      } else if (isSub(hash) || isSub(page)) {
+        // Entrando numa subpágina/detalhe pela primeira vez — vai ao topo
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
-      setPage(hash)
     }
     window.addEventListener('hashchange', handler)
     return () => window.removeEventListener('hashchange', handler)
