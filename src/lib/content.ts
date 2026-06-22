@@ -52,6 +52,10 @@ const EVENTO_BY_SLUG_QUERY = `*[_type == "evento" && slug.current == $slug][0]{
   _id, titulo, categoria, destaque, data, local, detalhe, ctaLabel, linkUrl, imagem, "slug": slug.current, descricao
 }`
 
+const EVENTOS_NAV_QUERY = `*[_type == "evento" && defined(slug)] | order(data asc){
+  "slug": slug.current, titulo
+}`
+
 const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
   _id, titulo, data, resumo, capa, "slug": slug.current
 }`
@@ -137,6 +141,17 @@ export async function getEvento(slug: string): Promise<Evento | null> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar evento.', err)
     return null
+  }
+}
+
+export interface EventoNav { slug: string; titulo: string }
+
+export async function getEventosNav(): Promise<EventoNav[]> {
+  if (!sanityConfigured || !sanityClient) return []
+  try {
+    return await sanityClient.fetch<EventoNav[]>(EVENTOS_NAV_QUERY)
+  } catch {
+    return []
   }
 }
 

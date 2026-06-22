@@ -28,6 +28,8 @@ import {
 import {
   getEventos,
   getEvento,
+  getEventosNav,
+  type EventoNav,
   getNoticias,
   getNoticia,
   getNoticiasNav,
@@ -659,17 +661,22 @@ function TodasNoticias() {
 function EventoDetalhe({ slug }: { slug: string }) {
   const [evento, setEvento] = useState<Evento | null>(null)
   const [loading, setLoading] = useState(true)
+  const [nav, setNav] = useState<EventoNav[]>([])
 
   useEffect(() => {
     let active = true
     setLoading(true)
-    getEvento(slug)
-      .then((e) => { if (active) { setEvento(e); setLoading(false) } })
+    Promise.all([getEvento(slug), getEventosNav()])
+      .then(([e, navList]) => { if (active) { setEvento(e); setNav(navList); setLoading(false) } })
       .catch(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [slug])
 
   const capa = urlForImage(evento?.imagem)
+  const idx = nav.findIndex(n => n.slug === slug)
+  const prev = idx > 0 ? nav[idx - 1] : null
+  const next = idx >= 0 && idx < nav.length - 1 ? nav[idx + 1] : null
+  const goTo = (s: string) => { window.location.hash = `evento/${s}`; window.scrollTo(0, 0) }
 
   return (
     <main id="conteudo" className="noticia-detalhe">
@@ -718,6 +725,33 @@ function EventoDetalhe({ slug }: { slug: string }) {
               )}
             </div>
           </article>
+        )}
+
+        {!loading && nav.length > 0 && (
+          <nav className="noticia-nav">
+            <div className="noticia-nav-item noticia-nav-prev">
+              {prev && (
+                <button onClick={() => goTo(prev.slug)} aria-label="Evento anterior">
+                  <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} />
+                  <span>
+                    <small>Anterior</small>
+                    <strong>{prev.titulo}</strong>
+                  </span>
+                </button>
+              )}
+            </div>
+            <div className="noticia-nav-item noticia-nav-next">
+              {next && (
+                <button onClick={() => goTo(next.slug)} aria-label="Próximo evento">
+                  <span>
+                    <small>Próximo</small>
+                    <strong>{next.titulo}</strong>
+                  </span>
+                  <ArrowRight size={16} />
+                </button>
+              )}
+            </div>
+          </nav>
         )}
       </div>
     </main>
