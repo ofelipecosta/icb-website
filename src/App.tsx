@@ -281,11 +281,11 @@ function Header({ currentPage }: { currentPage?: string }) {
     </header>
 
       <div id="mobile-menu" className={`mobile-menu${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
-        <div className="mobile-menu-scrim" onClick={() => { setMenuOpen(false); setOpenSubmenu(null) }} />
+        <div className="mobile-menu-scrim" onClick={() => setMenuOpen(false)} />
         <div className="mobile-menu-panel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
           <div className="mobile-menu-head">
             <span className="brand-name" style={{ color: 'var(--navy)' }}>Iate Clube Brasileiro</span>
-            <button className="mobile-menu-close" aria-label="Fechar menu" onClick={() => { setMenuOpen(false); setOpenSubmenu(null) }}>
+            <button className="mobile-menu-close" aria-label="Fechar menu" onClick={() => setMenuOpen(false)}>
               <X size={24} />
             </button>
           </div>
