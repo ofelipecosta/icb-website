@@ -694,16 +694,16 @@ function Footer() {
         </div>
         <div>
           <h4>Clube</h4>
-          <a href="#">História</a>
-          <a href="#">Instalações</a>
+          <a href="#historia">História</a>
+          <a href="#instalacoes">Instalações</a>
           <a href="#administracao">Administração</a>
-          <a href="#">Documentos</a>
+          <a href="#documentos">Documentos</a>
         </div>
         <div>
           <h4>Náutica</h4>
-          <a href="#">Velas e regatas</a>
-          <a href="#">Secretaria náutica</a>
-          <a href="#">Calendário</a>
+          <a href="#regatas">Velas e regatas</a>
+          <a href="#secretaria-nautica">Secretaria náutica</a>
+          <a href="#eventos">Calendário</a>
         </div>
         <div>
           <h4>Contato</h4>
