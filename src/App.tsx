@@ -292,6 +292,7 @@ const heroSlides = [aereo1, aereo2, aereo3]
 function Hero() {
   const reduce = useReducedMotion()
   const [current, setCurrent] = useState(0)
+  const dragStart = useRef<number | null>(null)
 
   useEffect(() => {
     if (reduce) return
@@ -301,8 +302,26 @@ function Hero() {
     return () => clearInterval(id)
   }, [reduce])
 
+  const handleDragStart = (x: number) => { dragStart.current = x }
+  const handleDragEnd = (x: number) => {
+    if (dragStart.current === null) return
+    const diff = dragStart.current - x
+    if (Math.abs(diff) > 40) {
+      setCurrent(c => diff > 0
+        ? (c + 1) % heroSlides.length
+        : (c - 1 + heroSlides.length) % heroSlides.length)
+    }
+    dragStart.current = null
+  }
+
   return (
-    <section className="hero">
+    <section
+      className="hero"
+      onMouseDown={e => handleDragStart(e.clientX)}
+      onMouseUp={e => handleDragEnd(e.clientX)}
+      onTouchStart={e => handleDragStart(e.touches[0].clientX)}
+      onTouchEnd={e => handleDragEnd(e.changedTouches[0].clientX)}
+    >
       {heroSlides.map((src, i) => (
         <div
           key={i}
