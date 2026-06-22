@@ -365,7 +365,15 @@ html {
 .inst-item-alt .inst-inner { direction: rtl; }
 .inst-item-alt .inst-inner > * { direction: ltr; }
 .inst-foto-wrap { width: 100%; }
+.inst-carousel { position: relative; }
 .inst-foto-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 16px; display: block; }
+.inst-car-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.85); border: none; border-radius: 50%; width: 36px; height: 36px; font-size: 20px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: background 0.2s; }
+.inst-car-btn:hover { background: #fff; }
+.inst-car-prev { left: 10px; }
+.inst-car-next { right: 10px; }
+.inst-car-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
+.inst-car-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.5); border: none; cursor: pointer; padding: 0; transition: background 0.2s; }
+.inst-car-dot--active { background: #fff; }
 .inst-foto-placeholder { width: 100%; aspect-ratio: 4/3; background: rgba(10,39,66,0.06); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(10,39,66,0.15); }
 .inst-foto-label { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); opacity: 0.6; }
 .inst-foto-label span { font-size: 13px; }

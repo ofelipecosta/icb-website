@@ -1090,6 +1090,43 @@ function DocumentosOficiais() {
   )
 }
 
+function InstFotos({ fotos, titulo }: { fotos?: Instalacao['fotos']; titulo: string }) {
+  const [idx, setIdx] = useState(0)
+  const urls = (fotos ?? []).map(f => urlForImage(f)).filter(Boolean)
+
+  if (!urls.length) {
+    return (
+      <div className="inst-foto-wrap">
+        <div className="inst-foto-placeholder">
+          <div className="inst-foto-label">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Foto em breve</span>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="inst-foto-wrap">
+      <div className="inst-carousel">
+        <img src={urls[idx]} alt={titulo} className="inst-foto-img" />
+        {urls.length > 1 && (
+          <>
+            <button className="inst-car-btn inst-car-prev" onClick={() => setIdx(i => (i - 1 + urls.length) % urls.length)} aria-label="Foto anterior">‹</button>
+            <button className="inst-car-btn inst-car-next" onClick={() => setIdx(i => (i + 1) % urls.length)} aria-label="Próxima foto">›</button>
+            <div className="inst-car-dots">
+              {urls.map((_, i) => (
+                <button key={i} className={`inst-car-dot${i === idx ? ' inst-car-dot--active' : ''}`} onClick={() => setIdx(i)} aria-label={`Foto ${i + 1}`} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 function Instalacoes() {
   const [instalacoes, setInstalacoes] = useState<Instalacao[]>(INSTALACOES_FALLBACK)
 
@@ -1112,23 +1149,11 @@ function Instalacoes() {
 
       <div style={{ background: 'var(--cream)' }}>
         {instalacoes.map((inst, i) => {
-          const foto = urlForImage(inst.foto)
           return (
             <Reveal key={inst._id}>
               <div className={`inst-item ${i % 2 === 1 ? 'inst-item-alt' : ''}`}>
                 <div className="container inst-inner">
-                  <div className="inst-foto-wrap">
-                    {foto ? (
-                      <img src={foto} alt={inst.titulo} className="inst-foto-img" />
-                    ) : (
-                      <div className="inst-foto-placeholder">
-                        <div className="inst-foto-label">
-                          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                          <span>Foto em breve</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                  <InstFotos fotos={inst.fotos} titulo={inst.titulo} />
                   <div className="inst-body">
                     <h2 className="inst-titulo">{inst.titulo}</h2>
                     {inst.texto && <p className="inst-texto">{inst.texto}</p>}

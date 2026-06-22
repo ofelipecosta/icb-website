@@ -194,13 +194,13 @@ export interface Instalacao {
   titulo: string
   ordem?: number
   texto?: string
-  foto?: SanityImageSource
+  fotos?: SanityImageSource[]
   ctaLabel?: string
   ctaUrl?: string
 }
 
 const INSTALACOES_QUERY = `*[_type == "instalacao"] | order(ordem asc){
-  _id, titulo, ordem, texto, foto, ctaLabel, ctaUrl
+  _id, titulo, ordem, texto, fotos, ctaLabel, ctaUrl
 }`
 
 export const INSTALACOES_FALLBACK: Instalacao[] = [
