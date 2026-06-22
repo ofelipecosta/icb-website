@@ -321,16 +321,16 @@ function Header({ currentPage }: { currentPage?: string }) {
                 )}
               </div>
             ))}
+            <a
+              className="btn btn-primary mobile-menu-cta"
+              href="https://icb.areadosocio.com.br"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setMenuOpen(false)}
+            >
+              Área do associado <ArrowRight size={16} />
+            </a>
           </div>
-          <a
-            className="btn btn-primary mobile-menu-cta"
-            href="https://icb.areadosocio.com.br"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => setMenuOpen(false)}
-          >
-            Área do associado <ArrowRight size={16} />
-          </a>
         </div>
       </div>
     </>
