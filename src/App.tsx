@@ -1480,45 +1480,39 @@ function SecretariaNautica() {
   )
 }
 
-// Fallbacks CMS — substituídos pelo Sanity quando configurado
-const eventosNauticosFallback = [
-  { _id: 'en1', titulo: '3.º Campeonato Interclubes de Niterói — Vela', categoria: 'Vela', data: '2025-11-08', dataFim: '2025-12-06', local: 'Iate Clube Brasileiro', classes: 'RANGER 22 · SNIPER · ILCA · LASER · DINGUE · DY 6.5', inscricoes: 'https://regatas.icb.org.br', detalhe: 'Etapas: 08/11, 15/11 e 06/12. Inscrições até 30/10.' },
-  { _id: 'en2', titulo: '3.º Interclubes — Natação', categoria: 'Natação', data: '2025-10-11', dataFim: null, local: 'Praia Clube São Francisco', classes: null, inscricoes: null, detalhe: 'Taxa: R$ 35,00. Fichas na Secretaria Social. Inscrições até 03/10.' },
-  { _id: 'en3', titulo: '3.º Campeonato Interclubes — Canoagem', categoria: 'Canoagem', data: '2025-12-06', dataFim: null, local: 'Baía de Guanabara', classes: null, inscricoes: null, detalhe: 'Inscrições abertas na Secretaria Social.' },
-]
-
-const eventosSociaisFallback = [
-  { _id: 'es1', titulo: 'Biriba — Campeonato Interno', categoria: 'Social', data: '2025-11-09', dataFim: '2025-11-23', local: 'Salão de Jogos ICB', detalhe: 'Inscrições até 25/10. Chaveamento em 30/10. Competições em 09 e 23 de novembro.' },
-  { _id: 'es2', titulo: 'Sinuca — Torneio Interno', categoria: 'Social', data: '2025-11-01', dataFim: null, local: 'Salão de Jogos ICB', detalhe: 'Fichas e informações na Secretaria Social.' },
-]
 
 const categoryCores: Record<string, string> = {
   Vela: '#0a2742', Natação: '#1a6b8a', Canoagem: '#2d7a5f', Social: '#7a4f2d', default: '#4a4a4a',
 }
 
-function EventoCard({ titulo, categoria, data, dataFim, local, classes, inscricoes, detalhe }: {
-  titulo: string; categoria: string; data: string; dataFim?: string | null; local: string;
-  classes?: string | null; inscricoes?: string | null; detalhe?: string | null;
-}) {
-  const fmt = (d: string) => new Date(d + 'T12:00:00').toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
-  const cor = categoryCores[categoria] ?? categoryCores.default
+function EventoCard(ev: Evento) {
+  const fmt = (d: string) => new Date(d).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+  const cor = categoryCores[ev.categoria] ?? categoryCores.default
+  const href = ev.slug ? `#evento/${ev.slug}` : undefined
   return (
-    <div className="evcal-card">
+    <div
+      className={`evcal-card${href ? ' evcal-card--link' : ''}`}
+      onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
+      role={href ? 'button' : undefined}
+      tabIndex={href ? 0 : undefined}
+      onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
+    >
       <div className="evcal-card-header" style={{ background: cor }}>
-        <span className="evcal-cat">{categoria}</span>
-        <div className="evcal-data">{fmt(data)}{dataFim ? ` – ${fmt(dataFim)}` : ''}</div>
+        <span className="evcal-cat">{ev.categoria}</span>
+        {ev.data && <div className="evcal-data">{fmt(ev.data)}</div>}
       </div>
       <div className="evcal-card-body">
-        <h3 className="evcal-titulo">{titulo}</h3>
-        <div className="evcal-local">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          {local}
-        </div>
-        {classes && <div className="evcal-classes">{classes}</div>}
-        {detalhe && <p className="evcal-detalhe">{detalhe}</p>}
-        {inscricoes && (
-          <a href={inscricoes} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 13, padding: '8px 16px', marginTop: 12, display: 'inline-flex' }}>
-            Inscrever-se →
+        <h3 className="evcal-titulo">{ev.titulo}</h3>
+        {ev.local && (
+          <div className="evcal-local">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            {ev.local}
+          </div>
+        )}
+        {ev.detalhe && <div className="evcal-classes">{ev.detalhe}</div>}
+        {ev.linkUrl && (
+          <a href={ev.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 13, padding: '8px 16px', marginTop: 12, display: 'inline-flex' }} onClick={e => e.stopPropagation()}>
+            {ev.ctaLabel || 'Inscrever-se'} →
           </a>
         )}
       </div>
@@ -1528,11 +1522,18 @@ function EventoCard({ titulo, categoria, data, dataFim, local, classes, inscrico
 
 function Eventos() {
   const [filtro, setFiltro] = useState<'todos' | 'nautico' | 'social'>('todos')
-  const todosEventos = [
-    ...eventosNauticosFallback.map(e => ({ ...e, tipo: 'nautico' as const })),
-    ...eventosSociaisFallback.map(e => ({ ...e, tipo: 'social' as const, classes: undefined as string | undefined, inscricoes: undefined as string | undefined })),
-  ].sort((a, b) => a.data.localeCompare(b.data))
-  const visiveis = filtro === 'todos' ? todosEventos : todosEventos.filter(e => e.tipo === filtro)
+  const [eventos, setEventos] = useState<Evento[]>(EVENTOS_FALLBACK)
+
+  useEffect(() => {
+    let active = true
+    getEventos().then((e) => active && setEventos(e))
+    return () => { active = false }
+  }, [])
+
+  const nauticos = ['Regata', 'Canoagem', 'Natação']
+  const visiveis = filtro === 'todos' ? eventos
+    : filtro === 'nautico' ? eventos.filter(e => nauticos.includes(e.categoria))
+    : eventos.filter(e => !nauticos.includes(e.categoria))
 
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
