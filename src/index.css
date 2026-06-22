@@ -790,6 +790,16 @@ html {
 .noticia-corpo h3 { font-size: 20px; margin: 28px 0 10px; }
 .noticia-corpo a { color: var(--brass); }
 .noticia-corpo strong { font-weight: 700; }
+.noticia-nav { display: flex; gap: 16px; margin-top: 56px; padding-top: 32px; border-top: 1px solid #e5e1d8; }
+.noticia-nav-item { flex: 1; }
+.noticia-nav-item button { display: flex; align-items: center; gap: 12px; background: #f5f3ef; border: 1px solid #e5e1d8; border-radius: 10px; padding: 16px 20px; cursor: pointer; width: 100%; text-align: left; transition: border-color 0.2s, background 0.2s; }
+.noticia-nav-item button:hover { border-color: var(--brass); background: #faf8f5; }
+.noticia-nav-item button svg { flex-shrink: 0; color: var(--brass); }
+.noticia-nav-item span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.noticia-nav-item small { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); }
+.noticia-nav-item strong { font-size: 14px; font-weight: 600; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+.noticia-nav-next button { flex-direction: row-reverse; text-align: right; }
+@media (max-width: 600px) { .noticia-nav { flex-direction: column; } .noticia-nav-next button { flex-direction: row; text-align: left; } }
 .noticia-corpo ul, .noticia-corpo ol { padding-left: 24px; margin-bottom: 18px; }
 .noticia-corpo li { margin-bottom: 6px; }
 .noticia-corpo-img { width: 100%; border-radius: 8px; margin: 24px 0; }

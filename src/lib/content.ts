@@ -64,6 +64,10 @@ const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]
   _id, titulo, data, resumo, capa, "slug": slug.current, corpo
 }`
 
+const NOTICIAS_NAV_QUERY = `*[_type == "noticia"] | order(data desc){
+  "slug": slug.current, titulo
+}`
+
 /* ===========================================================================
  * Fallback (usado enquanto o Sanity não está configurado ou se a busca falhar)
  * ======================================================================== */
@@ -154,6 +158,17 @@ export async function getNoticia(slug: string): Promise<Noticia | null> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar notícia.', err)
     return null
+  }
+}
+
+export interface NoticiaNav { slug: string; titulo: string }
+
+export async function getNoticiasNav(): Promise<NoticiaNav[]> {
+  if (!sanityConfigured || !sanityClient) return []
+  try {
+    return await sanityClient.fetch<NoticiaNav[]>(NOTICIAS_NAV_QUERY)
+  } catch {
+    return []
   }
 }
 

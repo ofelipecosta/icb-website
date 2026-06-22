@@ -30,6 +30,8 @@ import {
   getEvento,
   getNoticias,
   getNoticia,
+  getNoticiasNav,
+  type NoticiaNav,
   getTodasNoticias,
   getInstalacoes,
   getRegatas,
@@ -725,17 +727,25 @@ function EventoDetalhe({ slug }: { slug: string }) {
 function NoticiaDetalhe({ slug }: { slug: string }) {
   const [noticia, setNoticia] = useState<Noticia | null>(null)
   const [loading, setLoading] = useState(true)
+  const [nav, setNav] = useState<NoticiaNav[]>([])
 
   useEffect(() => {
     let active = true
     setLoading(true)
-    getNoticia(slug)
-      .then((n) => { if (active) { setNoticia(n); setLoading(false) } })
+    Promise.all([getNoticia(slug), getNoticiasNav()])
+      .then(([n, navList]) => {
+        if (active) { setNoticia(n); setNav(navList); setLoading(false) }
+      })
       .catch(() => { if (active) setLoading(false) })
     return () => { active = false }
   }, [slug])
 
   const capa = urlForImage(noticia?.capa)
+  const idx = nav.findIndex(n => n.slug === slug)
+  const prev = idx > 0 ? nav[idx - 1] : null
+  const next = idx >= 0 && idx < nav.length - 1 ? nav[idx + 1] : null
+
+  const goTo = (s: string) => { window.location.hash = `noticia/${s}`; window.scrollTo(0, 0) }
 
   return (
     <main id="conteudo" className="noticia-detalhe">
@@ -781,6 +791,33 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
               )}
             </div>
           </article>
+        )}
+
+        {!loading && nav.length > 0 && (
+          <nav className="noticia-nav">
+            <div className="noticia-nav-item noticia-nav-prev">
+              {prev && (
+                <button onClick={() => goTo(prev.slug)} aria-label="Notícia anterior">
+                  <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} />
+                  <span>
+                    <small>Anterior</small>
+                    <strong>{prev.titulo}</strong>
+                  </span>
+                </button>
+              )}
+            </div>
+            <div className="noticia-nav-item noticia-nav-next">
+              {next && (
+                <button onClick={() => goTo(next.slug)} aria-label="Próxima notícia">
+                  <span>
+                    <small>Próxima</small>
+                    <strong>{next.titulo}</strong>
+                  </span>
+                  <ArrowRight size={16} />
+                </button>
+              )}
+            </div>
+          </nav>
         )}
       </div>
     </main>
