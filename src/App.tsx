@@ -9,7 +9,7 @@ import aereo3 from '../imagens/tela principal/aero_nova_03.png'
 import historiaFoto1 from '../imagens/historia/foto01.jpg'
 import historiaFoto2 from '../imagens/historia/foto02.jpg'
 import fotoVela from '../imagens/Vela/Vela.png'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, useReducedMotion, AnimatePresence } from 'motion/react'
 import {
   Sailboat,
   Anchor,
@@ -1206,7 +1206,18 @@ function InstFotos({ fotos, titulo }: { fotos?: Instalacao['fotos']; titulo: str
   return (
     <div className="inst-foto-wrap">
       <div className="inst-carousel">
-        <img src={urls[idx]} alt={titulo} className="inst-foto-img" />
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={idx}
+            src={urls[idx]}
+            alt={titulo}
+            className="inst-foto-img"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+          />
+        </AnimatePresence>
         {urls.length > 1 && (
           <>
             <button className="inst-car-btn inst-car-prev" onClick={() => setIdx(i => (i - 1 + urls.length) % urls.length)} aria-label="Foto anterior">‹</button>
