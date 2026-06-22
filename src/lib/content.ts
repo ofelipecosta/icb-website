@@ -56,7 +56,7 @@ const EVENTOS_NAV_QUERY = `*[_type == "evento" && defined(slug)] | order(data as
   "slug": slug.current, titulo
 }`
 
-const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
+const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...6]{
   _id, titulo, data, resumo, capa, "slug": slug.current
 }`
 
