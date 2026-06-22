@@ -490,8 +490,7 @@ function EventosCards() {
           className="ev-cards-grid"
           variants={stagger}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+          animate="show"
         >
           {cards.map((ev) => {
             const img = urlForImage(ev.imagem)
