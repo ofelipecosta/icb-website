@@ -24,6 +24,15 @@ export interface Evento {
   imagem?: SanityImageSource
 }
 
+export interface PortableTextBlock {
+  _type: string
+  _key?: string
+  style?: string
+  children?: Array<{ _type: string; _key?: string; text?: string; marks?: string[] }>
+  markDefs?: Array<{ _key: string; _type: string; href?: string }>
+  asset?: SanityImageSource
+}
+
 export interface Noticia {
   _id: string
   titulo: string
@@ -32,6 +41,7 @@ export interface Noticia {
   resumo?: string
   capa?: SanityImageSource
   slug?: string
+  corpo?: PortableTextBlock[]
 }
 
 /* ===========================================================================
@@ -44,6 +54,10 @@ const EVENTOS_QUERY = `*[_type == "evento"] | order(destaque desc, data asc){
 
 const NOTICIAS_QUERY = `*[_type == "noticia"] | order(data desc)[0...3]{
   _id, titulo, data, resumo, capa, "slug": slug.current
+}`
+
+const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]{
+  _id, titulo, data, resumo, capa, "slug": slug.current, corpo
 }`
 
 /* ===========================================================================
@@ -116,6 +130,16 @@ export async function getEventos(): Promise<Evento[]> {
   } catch (err) {
     console.warn('[Sanity] Falha ao buscar eventos, usando fallback.', err)
     return EVENTOS_FALLBACK
+  }
+}
+
+export async function getNoticia(slug: string): Promise<Noticia | null> {
+  if (!sanityConfigured || !sanityClient) return null
+  try {
+    return await sanityClient.fetch<Noticia | null>(NOTICIA_BY_SLUG_QUERY, { slug })
+  } catch (err) {
+    console.warn('[Sanity] Falha ao buscar notícia.', err)
+    return null
   }
 }
 

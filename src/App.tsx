@@ -26,6 +26,7 @@ import {
 import {
   getEventos,
   getNoticias,
+  getNoticia,
   formatDataCurta,
   formatDataLonga,
   type Evento,
@@ -33,6 +34,7 @@ import {
   EVENTOS_FALLBACK,
   NOTICIAS_FALLBACK,
 } from './lib/content'
+import { PortableText } from '@portabletext/react'
 import { urlForImage } from './lib/sanity'
 
 function toCalDate(iso?: string) {
@@ -500,9 +502,16 @@ function Noticias() {
         <div className="news-grid">
           {noticias.map((n, i) => {
             const capa = urlForImage(n.capa)
+            const href = n.slug ? `#noticia/${n.slug}` : undefined
             return (
               <Reveal key={n._id} delay={i * 0.1}>
-                <article className="news-card">
+                <article
+                  className={`news-card${href ? ' news-card--link' : ''}`}
+                  onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
+                  role={href ? 'button' : undefined}
+                  tabIndex={href ? 0 : undefined}
+                  onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
+                >
                   <div className="news-media" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
                     {!capa && <Newspaper size={28} strokeWidth={1.5} />}
                   </div>
@@ -510,6 +519,7 @@ function Noticias() {
                     {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
                     <h3>{n.titulo}</h3>
                     {n.resumo && <p>{n.resumo}</p>}
+                    {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
                   </div>
                 </article>
               </Reveal>
@@ -521,6 +531,68 @@ function Noticias() {
   )
 }
 
+
+function NoticiaDetalhe({ slug }: { slug: string }) {
+  const [noticia, setNoticia] = useState<Noticia | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let active = true
+    setLoading(true)
+    getNoticia(slug).then((n) => {
+      if (active) { setNoticia(n); setLoading(false) }
+    })
+    return () => { active = false }
+  }, [slug])
+
+  const capa = urlForImage(noticia?.capa)
+
+  return (
+    <main id="conteudo" className="noticia-detalhe">
+      <div className="container">
+        <button className="noticia-back" onClick={() => history.back()} aria-label="Voltar">
+          <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} /> Voltar
+        </button>
+
+        {loading && <div className="noticia-loading">Carregando…</div>}
+
+        {!loading && !noticia && (
+          <div className="noticia-loading">Notícia não encontrada.</div>
+        )}
+
+        {!loading && noticia && (
+          <article>
+            {capa && (
+              <div className="noticia-capa" style={{ backgroundImage: `url(${capa})` }} />
+            )}
+            <div className="noticia-content">
+              {noticia.data && (
+                <span className="news-date">{formatDataLonga(noticia.data)}</span>
+              )}
+              <h1>{noticia.titulo}</h1>
+              {noticia.resumo && <p className="noticia-resumo">{noticia.resumo}</p>}
+              {noticia.corpo && noticia.corpo.length > 0 && (
+                <div className="noticia-corpo">
+                  <PortableText
+                    value={noticia.corpo}
+                    components={{
+                      types: {
+                        image: ({ value }) => {
+                          const url = urlForImage(value)
+                          return url ? <img src={url} alt="" className="noticia-corpo-img" /> : null
+                        },
+                      },
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          </article>
+        )}
+      </div>
+    </main>
+  )
+}
 
 function Footer() {
   return (
@@ -1490,13 +1562,17 @@ const SUB_PAGES = new Set([
   '#identidade', '#instalacoes', '#regatas', '#secretaria-nautica', '#eventos', '#contato',
 ])
 
+function isNoticiaPage(hash: string) {
+  return hash.startsWith('#noticia/')
+}
+
 function useCurrentPage() {
   const [page, setPage] = useState(() => window.location.hash)
   useEffect(() => {
     const handler = () => {
       const hash = window.location.hash
       // Scroll ao topo apenas em trocas de subpágina
-      if (SUB_PAGES.has(hash) || SUB_PAGES.has(page)) {
+      if (SUB_PAGES.has(hash) || SUB_PAGES.has(page) || isNoticiaPage(hash) || isNoticiaPage(page)) {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
       setPage(hash)
@@ -1536,7 +1612,10 @@ function App() {
   const isEventos = page === '#eventos'
 
 
-  const subPage = isAdm ? <Administracao /> : isOuv ? <ContatoPage /> : isDocs ? <DocumentosOficiais /> : isContato ? <ContatoPage /> :
+  const noticiaSlug = isNoticiaPage(page) ? page.replace('#noticia/', '') : null
+
+  const subPage = noticiaSlug ? <NoticiaDetalhe slug={noticiaSlug} /> :
+    isAdm ? <Administracao /> : isOuv ? <ContatoPage /> : isDocs ? <DocumentosOficiais /> : isContato ? <ContatoPage /> :
     isHist ? <NossaHistoria /> : isIdfi ? <IdentidadeFilosofia /> : isInst ? <Instalacoes /> :
     isRegatas ? <VelasRegatas /> : isSecNaut ? <SecretariaNautica /> : isEventos ? <Eventos /> : null
 
