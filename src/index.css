@@ -501,7 +501,7 @@ html {
 }
 .mobile-menu-links > div > a:hover,
 .mobile-menu-links > a:hover { color: var(--brass); }
-.mobile-menu-cta { margin-top: 20px; width: 100%; justify-content: center; background: var(--navy) !important; }
+.mobile-menu-cta { margin-top: 20px; width: 100%; justify-content: center; }
 
 .nav-cta-mobile { display: none; }
 @media (max-width: 860px) {
