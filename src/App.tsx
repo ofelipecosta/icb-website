@@ -209,7 +209,15 @@ const navLinks = [
 
 function Header({ currentPage }: { currentPage?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(() => {
+    const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
+    return active?.href ?? null
+  })
+
+  useEffect(() => {
+    const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
+    if (active) setOpenSubmenu(active.href)
+  }, [currentPage])
 
   const isActive = (l: typeof navLinks[0]) => {
     if (l.submenu) return l.submenu.some(s => s.href === currentPage)
