@@ -22,6 +22,8 @@ import {
   CalendarPlus,
   Leaf,
   Heart,
+  Share2,
+  Check,
 } from 'lucide-react'
 import {
   getEventos,
@@ -75,6 +77,32 @@ function downloadIcs(ev: Evento) {
   a.download = `${ev.titulo.replace(/\s+/g, '_')}.ics`
   a.click()
   URL.revokeObjectURL(url)
+}
+
+function ShareButton({ title, url }: { title: string; url: string }) {
+  const [copied, setCopied] = useState(false)
+
+  const handleShare = async () => {
+    const fullUrl = `${window.location.origin}${window.location.pathname}${url}`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url: fullUrl })
+      } catch {
+        // user cancelled
+      }
+    } else {
+      await navigator.clipboard.writeText(fullUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  return (
+    <button className="share-btn" onClick={handleShare} aria-label="Compartilhar">
+      {copied ? <Check size={15} /> : <Share2 size={15} />}
+      {copied ? 'Link copiado!' : 'Compartilhar'}
+    </button>
+  )
 }
 
 function AddToCalendar({ ev }: { ev: Evento }) {
@@ -464,6 +492,7 @@ function EventosCards() {
                     </a>
                   )}
                   {ev.data && <AddToCalendar ev={ev} />}
+                  <ShareButton title={ev.titulo} url={`#eventos`} />
                 </div>
               </motion.div>
             )
@@ -550,9 +579,12 @@ function NoticiaDetalhe({ slug }: { slug: string }) {
   return (
     <main id="conteudo" className="noticia-detalhe">
       <div className="container">
-        <button className="noticia-back" onClick={() => history.back()} aria-label="Voltar">
-          <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} /> Voltar
-        </button>
+        <div className="noticia-topbar">
+          <button className="noticia-back" onClick={() => history.back()} aria-label="Voltar">
+            <ArrowRight size={16} style={{ transform: 'rotate(180deg)' }} /> Voltar
+          </button>
+          {noticia && <ShareButton title={noticia.titulo} url={`#noticia/${slug}`} />}
+        </div>
 
         {loading && <div className="noticia-loading">Carregando…</div>}
 
