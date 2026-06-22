@@ -862,7 +862,7 @@ const WA_CONTACTS = [
   { label: 'Secretaria Social', number: '5521985564487' },
   { label: 'Secretaria Náutica', number: '5521985564489' },
   { label: 'Financeiro',         number: '5521985564485' },
-  { label: 'Eventos',            number: '5521973303932' },
+  { label: 'Eventos',            number: '5521973703932' },
 ]
 
 function WhatsAppFloat() {
