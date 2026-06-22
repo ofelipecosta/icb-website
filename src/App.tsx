@@ -1557,9 +1557,9 @@ function Eventos() {
       <div className="historia-hero">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
-          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>ICB</p>
+          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Eventos</p>
           <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(32px, 5.5vw, 58px)', color: '#fff', margin: '0 0 16px', lineHeight: 1.1 }}>Calendário de <em style={{ fontStyle: 'italic', color: '#e8605a' }}>Eventos</em></h1>
-          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, maxWidth: '52ch', lineHeight: 1.75, margin: 0 }}>Eventos náuticos e sociais do clube em um só lugar. Atualizado pelas secretarias via CMS.</p>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, maxWidth: '52ch', lineHeight: 1.75, margin: 0 }}>Eventos náuticos e sociais do clube em um só lugar. Atualizado pelas secretarias.</p>
         </div>
       </div>
       <div className="section" style={{ background: 'var(--cream)' }}>
@@ -1661,7 +1661,7 @@ function ContatoPage() {
       <div className="historia-hero">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
-          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>ICB</p>
+          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Contato</p>
           <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(32px, 5.5vw, 58px)', color: '#fff', margin: '0 0 16px', lineHeight: 1.1 }}>Entre em <em style={{ fontStyle: 'italic', color: '#e8605a' }}>Contato</em></h1>
           <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, maxWidth: '52ch', lineHeight: 1.75, margin: 0 }}>Encontre o departamento certo e fale diretamente com quem pode ajudar.</p>
         </div>
