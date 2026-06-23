@@ -27,6 +27,7 @@ import {
   Pin,
   Info,
   AlertTriangle,
+  CalendarDays,
 } from 'lucide-react'
 import {
   getEventos,
@@ -508,7 +509,7 @@ function EventosCards() {
           </div>
         </Reveal>
         <motion.div
-          className="ev-cards-grid"
+          className="nc-grid"
           variants={stagger}
           initial="hidden"
           animate="show"
@@ -517,9 +518,9 @@ function EventosCards() {
             const img = urlForImage(ev.imagem)
             const eventoHref = ev.slug ? `#evento/${ev.slug}` : undefined
             return (
-              <motion.div
+              <motion.article
                 key={ev._id}
-                className={`ev-card-b${eventoHref ? ' ev-card-b--link' : ''}`}
+                className={`nc-card${eventoHref ? ' nc-card--link' : ''}`}
                 variants={fadeUp}
                 transition={{ duration: 0.5 }}
                 onClick={eventoHref ? () => { window.location.hash = eventoHref.slice(1) } : undefined}
@@ -527,28 +528,30 @@ function EventosCards() {
                 tabIndex={eventoHref ? 0 : undefined}
                 onKeyDown={eventoHref ? (e) => e.key === 'Enter' && (window.location.hash = eventoHref.slice(1)) : undefined}
               >
-                {img && (
-                  <div className="ev-card-b-photo" style={{ backgroundImage: `url(${img})` }} />
-                )}
-                <div className="ev-card-b-body">
-                  <div className="ev-card-b-header">
-                    {ev.categoria && <span className="ev-card-b-tag">{ev.categoria}</span>}
-                    <div className="ev-card-b-icons">
+                <div className="nc-img">
+                  {img
+                    ? <img src={img} alt={ev.titulo} className="nc-img-photo" draggable={false} />
+                    : <div className="nc-img-placeholder"><CalendarDays size={24} strokeWidth={1.5} /></div>
+                  }
+                  {ev.categoria && <span className="nc-badge nc-badge--cat">{ev.categoria}</span>}
+                </div>
+                <div className="nc-body">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                    {ev.data && <span style={{ fontSize: 12, color: 'var(--muted)' }}>{formatDataCurta(ev.data)}</span>}
+                    <div style={{ display: 'flex', gap: 4 }} onClick={e => e.stopPropagation()}>
                       {ev.data && <AddToCalendar ev={ev} iconOnly />}
                       <ShareButton title={ev.titulo} url={eventoHref ?? '#eventos'} />
                     </div>
                   </div>
-                  <h3 className="ev-card-b-title">{ev.titulo}</h3>
-                  <p className="ev-card-b-meta">
-                    {[ev.local, formatDataCurta(ev.data)].filter(Boolean).join(' · ')}
-                  </p>
+                  <h3>{ev.titulo}</h3>
+                  {ev.local && <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 8px' }}>{ev.local}</p>}
                   {ev.linkUrl && (
-                    <a className="ev-card-b-cta" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
-                      {ev.ctaLabel || 'Saiba mais'} <ArrowRight size={14} />
+                    <a className="nc-saiba" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
+                      {ev.ctaLabel || 'Saiba mais'} »
                     </a>
                   )}
                 </div>
-              </motion.div>
+              </motion.article>
             )
           })}
         </motion.div>
@@ -563,23 +566,24 @@ function NewsCard3({ n }: { n: Noticia }) {
   const go = () => href && (window.location.hash = href.slice(1))
   return (
     <article
-      className={`news-card3${href ? ' news-card--link' : ''}`}
+      className={`nc-card${href ? ' nc-card--link' : ''}`}
       onClick={href ? go : undefined}
       role={href ? 'button' : undefined}
       tabIndex={href ? 0 : undefined}
       onKeyDown={href ? (e) => e.key === 'Enter' && go() : undefined}
     >
-      <div className="news-card3-img" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
-        {!capa && <Newspaper size={22} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
+      <div className="nc-img">
+        {capa
+          ? <img src={capa} alt={stripEmoji(n.titulo)} className="nc-img-photo" draggable={false} />
+          : <div className="nc-img-placeholder"><Newspaper size={24} strokeWidth={1.5} /></div>
+        }
+        {n.fixado && <span className="nc-badge nc-badge--pin"><Pin size={10} /> Fixado</span>}
       </div>
-      <div className="news-card3-body">
-        <span className="news-date-row">
-          {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
-          {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-        </span>
+      <div className="nc-body">
         <h3>{stripEmoji(n.titulo)}</h3>
-        {href && <span className="news-read-more">Ler mais <ArrowRight size={13} /></span>}
+        {href && <span className="nc-saiba">Saiba mais »</span>}
       </div>
+      {n.data && <div className="nc-footer">{formatDataLonga(n.data)}</div>}
     </article>
   )
 }
@@ -634,7 +638,7 @@ function Noticias() {
         </Reveal>
 
         {middle.length > 0 && (
-          <div className="news-grid3">
+          <div className="nc-grid" style={{ marginTop: 20 }}>
             {middle.map((n, i) => (
               <Reveal key={n._id} delay={i * 0.08}><NewsCard3 n={n} /></Reveal>
             ))}
@@ -1785,41 +1789,40 @@ function SecretariaNautica() {
 }
 
 
-const categoryCores: Record<string, string> = {
-  Vela: '#0a2742', Natação: '#1a6b8a', Canoagem: '#2d7a5f', Social: '#7a4f2d', default: '#4a4a4a',
-}
-
 function EventoCard(ev: Evento) {
-  const cor = categoryCores[ev.categoria] ?? categoryCores.default
+  const img = urlForImage(ev.imagem)
   const href = ev.slug ? `#evento/${ev.slug}` : undefined
+  const go = () => href && (window.location.hash = href.slice(1))
   return (
-    <div
-      className={`evcal-card${href ? ' evcal-card--link' : ''}`}
-      onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
+    <article
+      className={`nc-card${href ? ' nc-card--link' : ''}`}
+      onClick={href ? go : undefined}
       role={href ? 'button' : undefined}
       tabIndex={href ? 0 : undefined}
-      onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
+      onKeyDown={href ? (e) => e.key === 'Enter' && go() : undefined}
     >
-      <div className="evcal-card-header" style={{ background: cor }}>
-        <span className="evcal-cat">{ev.categoria}</span>
-        {ev.data && <div className="evcal-data">{formatDataCurta(ev.data)}</div>}
+      <div className="nc-img">
+        {img
+          ? <img src={img} alt={ev.titulo} className="nc-img-photo" draggable={false} />
+          : <div className="nc-img-placeholder"><CalendarDays size={28} strokeWidth={1.5} /></div>
+        }
+        {ev.categoria && <span className="nc-badge nc-badge--cat">{ev.categoria}</span>}
       </div>
-      <div className="evcal-card-body">
-        <h3 className="evcal-titulo">{ev.titulo}</h3>
-        {ev.local && (
-          <div className="evcal-local">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-            {ev.local}
-          </div>
-        )}
-        {ev.detalhe && <div className="evcal-classes">{ev.detalhe}</div>}
+      <div className="nc-body">
+        {ev.data && <span style={{ fontSize: 12, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>{formatDataLonga(ev.data)}</span>}
+        <h3>{ev.titulo}</h3>
+        {ev.local && <p style={{ fontSize: 12, color: 'var(--muted)', margin: '4px 0 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <MapPin size={11} /> {ev.local}
+        </p>}
+        {ev.detalhe && <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 10px' }}>{ev.detalhe}</p>}
         {ev.linkUrl && (
-          <a href={ev.linkUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ fontSize: 13, padding: '8px 16px', marginTop: 12, display: 'inline-flex' }} onClick={e => e.stopPropagation()}>
-            {ev.ctaLabel || 'Inscrever-se'} →
+          <a className="nc-saiba" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
+            {ev.ctaLabel || 'Inscrever-se'} »
           </a>
         )}
       </div>
-    </div>
+      {ev.data && <div className="nc-footer">{formatDataCurta(ev.data)}</div>}
+    </article>
   )
 }
 
@@ -1864,7 +1867,7 @@ function Eventos() {
             </div>
           </Reveal>
           {visiveis.length > 0 ? (
-            <div className="evcal-grid">
+            <div className="nc-grid">
               {visiveis.map((e, i) => (
                 <Reveal key={e._id} delay={i * 0.08}>
                   <EventoCard {...e} />
@@ -2145,8 +2148,8 @@ function App() {
         <PageTransition pageKey="home">
           <main id="conteudo">
             <Hero />
-            <EventosCards />
             <Noticias />
+            <EventosCards />
             <OClube />
           </main>
         </PageTransition>
