@@ -665,7 +665,7 @@ function TodasNoticias() {
 
   return (
     <main id="conteudo">
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Notícias</p>
@@ -676,31 +676,32 @@ function TodasNoticias() {
 
       <div className="section section-alt">
         <div className="container">
-          <div className="news-grid news-grid--full">
+          <div className="nc-grid">
             {noticias.map((n, i) => {
               const capa = urlForImage(n.capa)
               const href = n.slug ? `#noticia/${n.slug}` : undefined
               return (
                 <Reveal key={n._id} delay={(i % 3) * 0.08}>
                   <article
-                    className={`news-card${href ? ' news-card--link' : ''}`}
+                    className={`nc-card${href ? ' nc-card--link' : ''}`}
                     onClick={href ? () => { window.location.hash = href.slice(1) } : undefined}
                     role={href ? 'button' : undefined}
                     tabIndex={href ? 0 : undefined}
                     onKeyDown={href ? (e) => e.key === 'Enter' && (window.location.hash = href.slice(1)) : undefined}
                   >
-                    <div className="news-media" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
-                      {!capa && <Newspaper size={28} strokeWidth={1.5} />}
+                    <div className="nc-img">
+                      {capa
+                        ? <img src={capa} alt={stripEmoji(n.titulo)} className="nc-img-photo" draggable={false} />
+                        : <div className="nc-img-placeholder"><Newspaper size={28} strokeWidth={1.5} /></div>
+                      }
+                      {n.fixado && <span className="nc-badge nc-badge--pin"><Pin size={10} /> Fixado</span>}
                     </div>
-                    <div className="news-body">
-                      <span className="news-date-row">
-                        {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
-                        {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-                      </span>
+                    <div className="nc-body">
                       <h3>{stripEmoji(n.titulo)}</h3>
                       {n.resumo && <p>{stripEmoji(n.resumo)}</p>}
-                      {href && <span className="news-read-more">Ler notícia completa <ArrowRight size={14} /></span>}
+                      {href && <span className="nc-saiba">Saiba mais »</span>}
                     </div>
+                    {n.data && <div className="nc-footer">{formatDataLonga(n.data)}</div>}
                   </article>
                 </Reveal>
               )
@@ -1060,12 +1061,16 @@ function Footer() {
 
 function Administracao() {
   return (
-    <main id="conteudo" className="section" style={{ paddingTop: 120 }}>
+    <main id="conteudo" style={{ paddingTop: 0 }}>
+      <div className="historia-hero historia-hero--compact">
+        <div className="historia-hero-overlay" />
+        <div className="container historia-hero-inner">
+          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>O Clube</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(32px, 5.5vw, 58px)', color: '#fff', margin: '0 0 16px', lineHeight: 1.1 }}>Administração</h1>
+        </div>
+      </div>
+      <div className="section">
       <div className="container" style={{ maxWidth: 860 }}>
-        <Reveal>
-          <div className="eyebrow">O Clube</div>
-          <h2 style={{ marginBottom: 48 }}>Administração</h2>
-        </Reveal>
 
         <Reveal>
           <div className="adm-mensagem">
@@ -1154,6 +1159,7 @@ function Administracao() {
           </div>
         </Reveal>
       </div>
+      </div>
     </main>
   )
 }
@@ -1170,7 +1176,7 @@ function NossaHistoria() {
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero banner */}
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>O Clube</p>
@@ -1292,7 +1298,7 @@ function IdentidadeFilosofia() {
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero */}
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>O Clube</p>
@@ -1393,13 +1399,17 @@ function DocumentosOficiais() {
   )
 
   return (
-    <main id="conteudo" className="section" style={{ paddingTop: 120 }}>
+    <main id="conteudo" style={{ paddingTop: 0 }}>
+      <div className="historia-hero historia-hero--compact">
+        <div className="historia-hero-overlay" />
+        <div className="container historia-hero-inner">
+          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>O Clube</p>
+          <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(32px, 5.5vw, 58px)', color: '#fff', margin: '0 0 16px', lineHeight: 1.1 }}>Documentos Oficiais</h1>
+          <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: 16, maxWidth: '52ch', lineHeight: 1.75, margin: 0 }}>Acesse os documentos que regem o funcionamento do Iate Clube Brasileiro.</p>
+        </div>
+      </div>
+      <div className="section">
       <div className="container" style={{ maxWidth: 800 }}>
-        <Reveal>
-          <p className="eyebrow" style={{ color: 'var(--brass)', fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>O Clube</p>
-          <h1 style={{ fontFamily: 'var(--display)', fontSize: 'clamp(28px, 5vw, 44px)', color: 'var(--navy)', marginBottom: 16 }}>Documentos Oficiais</h1>
-          <p style={{ color: 'var(--muted)', marginBottom: 56, maxWidth: '60ch' }}>Acesse os documentos que regem o funcionamento do Iate Clube Brasileiro.</p>
-        </Reveal>
 
         {loading && <div className="noticia-loading">Carregando…</div>}
 
@@ -1438,6 +1448,7 @@ function DocumentosOficiais() {
             </div>
           </div>
         ))}
+      </div>
       </div>
     </main>
   )
@@ -1525,7 +1536,7 @@ function Instalacoes() {
 
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>O Clube</p>
@@ -1574,7 +1585,7 @@ function VelasRegatas() {
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero */}
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Náutica</p>
@@ -1683,7 +1694,7 @@ function SecretariaNautica() {
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero */}
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Náutica</p>
@@ -1829,7 +1840,7 @@ function Eventos() {
 
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Eventos</p>
@@ -1933,7 +1944,7 @@ function ContatoPage() {
   return (
     <main id="conteudo" style={{ paddingTop: 0 }}>
       {/* Hero */}
-      <div className="historia-hero">
+      <div className="historia-hero historia-hero--compact">
         <div className="historia-hero-overlay" />
         <div className="container historia-hero-inner">
           <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>Contato</p>

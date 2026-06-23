@@ -225,6 +225,8 @@ html {
 .historia-hero::before { content: ''; position: absolute; inset: 0; background: url('../imagens/aero_nova_01.png') center/cover no-repeat; opacity: 0.28; }
 .historia-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to top, var(--navy-deep) 0%, transparent 60%); }
 .historia-hero-inner { position: relative; z-index: 2; padding-block: 80px 64px; }
+.historia-hero--compact { min-height: 220px; }
+.historia-hero--compact .historia-hero-inner { padding-block: 48px 36px; }
 .historia-quote { font-family: var(--display); font-size: clamp(17px, 2.2vw, 22px); color: rgba(255,255,255,0.88); line-height: 1.7; font-style: italic; margin: 0; padding-left: 24px; border-left: 3px solid var(--brass); }
 .historia-timeline { display: flex; flex-direction: column; gap: 0; }
 .historia-item { display: grid; grid-template-columns: 64px 32px 1fr; gap: 0 0; align-items: stretch; }
@@ -860,6 +862,30 @@ html {
   .news-grid:not(.news-grid--full)::-webkit-scrollbar { display: none; }
   .news-grid:not(.news-grid--full) > * { flex: 0 0 82vw; scroll-snap-align: start; }
 }
+
+/* ── Página de todas as notícias ──────────────────────────────── */
+.noticias-hero { background: var(--cream-deep); border-bottom: 1px solid var(--line); padding: 48px 0 40px; }
+.noticias-hero-eyebrow { font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+.noticias-hero-title { font-family: var(--display); font-size: clamp(28px, 4.5vw, 48px); color: var(--navy); margin: 0 0 12px; line-height: 1.1; }
+.noticias-hero-title em { font-style: italic; color: #e8605a; }
+.noticias-hero-sub { color: var(--muted); font-size: 15px; max-width: 52ch; line-height: 1.7; margin: 0; }
+
+.nc-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: 20px; }
+.nc-card { display: flex; flex-direction: column; background: var(--white); border: 0.5px solid var(--line); border-radius: 12px; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; height: 100%; }
+.nc-card--link { cursor: pointer; }
+.nc-card--link:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(10,39,66,0.10); }
+.nc-img { aspect-ratio: 16/9; flex-shrink: 0; position: relative; overflow: hidden; background: var(--navy-deep); display: grid; place-items: center; }
+.nc-img-photo { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nc-img-placeholder { width: 100%; height: 100%; display: grid; place-items: center; color: rgba(255,255,255,0.45); }
+.nc-badge { position: absolute; top: 10px; right: 10px; display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; padding: 4px 9px; border-radius: 20px; }
+.nc-badge--pin { background: var(--brass); color: #fff; }
+.nc-body { padding: 16px 16px 12px; flex: 1; display: flex; flex-direction: column; }
+.nc-body h3 { font-size: 15px; line-height: 1.35; color: var(--navy); margin: 0 0 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.nc-body p { font-size: 13px; color: var(--muted); line-height: 1.6; margin: 0 0 12px; flex: 1; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.nc-saiba { font-size: 11px; font-weight: 600; color: #9a6c0a; letter-spacing: 0.06em; text-transform: uppercase; margin-top: auto; }
+.nc-footer { padding: 10px 16px; border-top: 0.5px solid var(--line); font-size: 11px; color: var(--muted); flex-shrink: 0; }
+@media (max-width: 900px) { .nc-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: auto; } }
+@media (max-width: 600px) { .nc-grid { grid-template-columns: 1fr; } }
 
 /* Shared extras */
 .ev-card-b--link { cursor: pointer; }
