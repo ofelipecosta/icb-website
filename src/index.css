@@ -371,9 +371,11 @@ html {
 .inst-car-btn:hover { background: #fff; }
 .inst-car-prev { left: 10px; }
 .inst-car-next { right: 10px; }
-.inst-car-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; }
-.inst-car-dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.5); border: none; cursor: pointer; padding: 0; transition: background 0.2s; }
-.inst-car-dot--active { background: #fff; }
+.inst-thumbs { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.inst-thumb { width: 64px; height: 48px; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; cursor: pointer; background: none; flex-shrink: 0; transition: border-color 0.2s, opacity 0.2s; opacity: 0.55; }
+.inst-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inst-thumb--active { border-color: var(--red); opacity: 1; }
+.inst-thumb:hover:not(.inst-thumb--active) { opacity: 0.85; }
 .inst-foto-placeholder { width: 100%; aspect-ratio: 4/3; background: rgba(10,39,66,0.06); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px dashed rgba(10,39,66,0.15); }
 .inst-foto-label { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--muted); opacity: 0.6; }
 .inst-foto-label span { font-size: 13px; }

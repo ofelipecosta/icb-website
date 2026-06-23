@@ -1471,6 +1471,18 @@ function DocumentosOficiais() {
 function InstFotos({ fotos, titulo }: { fotos?: Instalacao['fotos']; titulo: string }) {
   const [idx, setIdx] = useState(0)
   const urls = (fotos ?? []).map(f => urlForImage(f)).filter(Boolean)
+  const dragStart = useRef<number | null>(null)
+
+  const prev = () => setIdx(i => (i - 1 + urls.length) % urls.length)
+  const next = () => setIdx(i => (i + 1) % urls.length)
+
+  const onPointerDown = (e: React.PointerEvent) => { dragStart.current = e.clientX }
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (dragStart.current === null) return
+    const diff = dragStart.current - e.clientX
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev()
+    dragStart.current = null
+  }
 
   if (!urls.length) {
     return (
@@ -1487,7 +1499,13 @@ function InstFotos({ fotos, titulo }: { fotos?: Instalacao['fotos']; titulo: str
 
   return (
     <div className="inst-foto-wrap">
-      <div className="inst-carousel">
+      <div
+        className="inst-carousel"
+        onPointerDown={onPointerDown}
+        onPointerUp={onPointerUp}
+        onPointerLeave={onPointerUp}
+        style={{ touchAction: 'pan-y', userSelect: 'none' }}
+      >
         <AnimatePresence mode="wait">
           <motion.img
             key={idx}
@@ -1497,21 +1515,26 @@ function InstFotos({ fotos, titulo }: { fotos?: Instalacao['fotos']; titulo: str
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: 'easeInOut' }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            draggable={false}
           />
         </AnimatePresence>
         {urls.length > 1 && (
           <>
-            <button className="inst-car-btn inst-car-prev" onClick={() => setIdx(i => (i - 1 + urls.length) % urls.length)} aria-label="Foto anterior">‹</button>
-            <button className="inst-car-btn inst-car-next" onClick={() => setIdx(i => (i + 1) % urls.length)} aria-label="Próxima foto">›</button>
-            <div className="inst-car-dots">
-              {urls.map((_, i) => (
-                <button key={i} className={`inst-car-dot${i === idx ? ' inst-car-dot--active' : ''}`} onClick={() => setIdx(i)} aria-label={`Foto ${i + 1}`} />
-              ))}
-            </div>
+            <button className="inst-car-btn inst-car-prev" onClick={prev} aria-label="Foto anterior">‹</button>
+            <button className="inst-car-btn inst-car-next" onClick={next} aria-label="Próxima foto">›</button>
           </>
         )}
       </div>
+      {urls.length > 1 && (
+        <div className="inst-thumbs">
+          {urls.map((url, i) => (
+            <button key={i} className={`inst-thumb${i === idx ? ' inst-thumb--active' : ''}`} onClick={() => setIdx(i)} aria-label={`Foto ${i + 1}`}>
+              <img src={url} alt={`${titulo} ${i + 1}`} draggable={false} />
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
