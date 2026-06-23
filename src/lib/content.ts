@@ -95,7 +95,7 @@ const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]
   _id, titulo, data, resumo, capa, "slug": slug.current, corpo
 }`
 
-const NOTICIAS_NAV_QUERY = `*[_type == "noticia"] | order(data desc){
+const NOTICIAS_NAV_QUERY = `*[_type == "noticia"] | order(fixado desc, data desc){
   "slug": slug.current, titulo
 }`
 
