@@ -508,53 +508,48 @@ function EventosCards() {
             </a>
           </div>
         </Reveal>
-        <motion.div
-          className="nc-grid"
-          variants={stagger}
-          initial="hidden"
-          animate="show"
-        >
-          {cards.map((ev) => {
+        <div className="nc-grid">
+          {cards.map((ev, i) => {
             const img = urlForImage(ev.imagem)
             const eventoHref = ev.slug ? `#evento/${ev.slug}` : undefined
+            const go = () => eventoHref && (window.location.hash = eventoHref.slice(1))
             return (
-              <motion.article
-                key={ev._id}
-                className={`nc-card${eventoHref ? ' nc-card--link' : ''}`}
-                variants={fadeUp}
-                transition={{ duration: 0.5 }}
-                onClick={eventoHref ? () => { window.location.hash = eventoHref.slice(1) } : undefined}
-                role={eventoHref ? 'button' : undefined}
-                tabIndex={eventoHref ? 0 : undefined}
-                onKeyDown={eventoHref ? (e) => e.key === 'Enter' && (window.location.hash = eventoHref.slice(1)) : undefined}
-              >
-                <div className="nc-img">
-                  {img
-                    ? <img src={img} alt={ev.titulo} className="nc-img-photo" draggable={false} />
-                    : <div className="nc-img-placeholder"><CalendarDays size={24} strokeWidth={1.5} /></div>
-                  }
-                  {ev.categoria && <span className="nc-badge nc-badge--cat">{ev.categoria}</span>}
-                </div>
-                <div className="nc-body">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                    {ev.data && <span style={{ fontSize: 12, color: 'var(--muted)' }}>{formatDataCurta(ev.data)}</span>}
-                    <div style={{ display: 'flex', gap: 4 }} onClick={e => e.stopPropagation()}>
+              <Reveal key={ev._id} delay={i * 0.08}>
+                <article
+                  className={`nc-card${eventoHref ? ' nc-card--link' : ''}`}
+                  onClick={eventoHref ? go : undefined}
+                  role={eventoHref ? 'button' : undefined}
+                  tabIndex={eventoHref ? 0 : undefined}
+                  onKeyDown={eventoHref ? (e) => e.key === 'Enter' && go() : undefined}
+                >
+                  <div className="nc-img">
+                    {img
+                      ? <img src={img} alt={ev.titulo} className="nc-img-photo" draggable={false} />
+                      : <div className="nc-img-placeholder"><CalendarDays size={24} strokeWidth={1.5} /></div>
+                    }
+                    {ev.categoria && <span className="nc-badge nc-badge--cat">{ev.categoria}</span>}
+                  </div>
+                  <div className="nc-body">
+                    <h3>{ev.titulo}</h3>
+                    {ev.local && <p style={{ fontSize: 12, color: 'var(--muted)', margin: '4px 0 8px', display: 'flex', alignItems: 'center', gap: 4 }}><MapPin size={11} /> {ev.local}</p>}
+                    {ev.linkUrl && (
+                      <a className="nc-saiba" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
+                        {ev.ctaLabel || 'Saiba mais'} »
+                      </a>
+                    )}
+                  </div>
+                  <div className="nc-footer nc-footer--ev" onClick={e => e.stopPropagation()}>
+                    {ev.data && <span>{formatDataLonga(ev.data)}</span>}
+                    <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                       {ev.data && <AddToCalendar ev={ev} iconOnly />}
                       <ShareButton title={ev.titulo} url={eventoHref ?? '#eventos'} />
                     </div>
                   </div>
-                  <h3>{ev.titulo}</h3>
-                  {ev.local && <p style={{ fontSize: 12, color: 'var(--muted)', margin: '0 0 8px' }}>{ev.local}</p>}
-                  {ev.linkUrl && (
-                    <a className="nc-saiba" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>
-                      {ev.ctaLabel || 'Saiba mais'} »
-                    </a>
-                  )}
-                </div>
-              </motion.article>
+                </article>
+              </Reveal>
             )
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   )
