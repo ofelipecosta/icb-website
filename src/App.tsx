@@ -625,7 +625,6 @@ function Noticias() {
   const heroImg = urlForImage(hero.capa)
   const heroHref = hero.slug ? `#noticia/${hero.slug}` : undefined
   const middle = noticias.slice(1, 4)
-  const bottom = noticias.slice(4, 6)
 
   return (
     <section className="section section-alt" id="noticias">
@@ -636,9 +635,6 @@ function Noticias() {
               <div className="eyebrow">Fique por dentro</div>
               <h2>Últimas notícias</h2>
             </div>
-            <a className="section-link" href="#noticias">
-              Ver todas as notícias <ArrowRight size={15} />
-            </a>
           </div>
         </Reveal>
 
@@ -670,16 +666,8 @@ function Noticias() {
           </div>
         )}
 
-        {bottom.length > 0 && (
-          <div className="news-grid2">
-            {bottom.map((n, i) => (
-              <Reveal key={n._id} delay={i * 0.08}><NewsCard2H n={n} /></Reveal>
-            ))}
-          </div>
-        )}
-
         <Reveal>
-          <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
             <a className="section-link" href="#noticias">
               Ver todas as notícias <ArrowRight size={15} />
             </a>
