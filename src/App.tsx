@@ -671,17 +671,20 @@ function Noticias() {
         )}
 
         {bottom.length > 0 && (
-          <>
-            <div className="news-divider">
-              <span>Mais notícias</span>
-            </div>
-            <div className="news-grid2">
-              {bottom.map((n, i) => (
-                <Reveal key={n._id} delay={i * 0.08}><NewsCard2H n={n} /></Reveal>
-              ))}
-            </div>
-          </>
+          <div className="news-grid2">
+            {bottom.map((n, i) => (
+              <Reveal key={n._id} delay={i * 0.08}><NewsCard2H n={n} /></Reveal>
+            ))}
+          </div>
         )}
+
+        <Reveal>
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <a className="section-link" href="#noticias">
+              Ver todas as notícias <ArrowRight size={15} />
+            </a>
+          </div>
+        </Reveal>
       </div>
     </section>
   )
