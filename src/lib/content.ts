@@ -83,11 +83,11 @@ const EVENTOS_NAV_QUERY = `*[_type == "evento" && defined(slug)] | order(data as
   "slug": slug.current, titulo
 }`
 
-const NOTICIAS_QUERY = `*[_type == "noticia" && defined(slug.current)] | order(fixado desc, data desc)[0...6]{
+const NOTICIAS_QUERY = `*[_type == "noticia" && defined(slug.current)] | order(select(fixado == true => 1, 0) desc, data desc)[0...6]{
   _id, titulo, data, resumo, capa, "slug": slug.current, fixado
 }`
 
-const TODAS_NOTICIAS_QUERY = `*[_type == "noticia" && defined(slug.current)] | order(fixado desc, data desc){
+const TODAS_NOTICIAS_QUERY = `*[_type == "noticia" && defined(slug.current)] | order(select(fixado == true => 1, 0) desc, data desc){
   _id, titulo, data, resumo, capa, "slug": slug.current, fixado
 }`
 
@@ -95,7 +95,7 @@ const NOTICIA_BY_SLUG_QUERY = `*[_type == "noticia" && slug.current == $slug][0]
   _id, titulo, data, resumo, capa, "slug": slug.current, corpo
 }`
 
-const NOTICIAS_NAV_QUERY = `*[_type == "noticia"] | order(fixado desc, data desc){
+const NOTICIAS_NAV_QUERY = `*[_type == "noticia" && defined(slug.current)] | order(select(fixado == true => 1, 0) desc, data desc){
   "slug": slug.current, titulo
 }`
 
