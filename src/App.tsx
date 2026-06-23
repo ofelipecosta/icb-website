@@ -584,31 +584,6 @@ function NewsCard3({ n }: { n: Noticia }) {
   )
 }
 
-function NewsCard2H({ n }: { n: Noticia }) {
-  const capa = urlForImage(n.capa)
-  const href = n.slug ? `#noticia/${n.slug}` : undefined
-  const go = () => href && (window.location.hash = href.slice(1))
-  return (
-    <article
-      className={`news-card2h${href ? ' news-card--link' : ''}`}
-      onClick={href ? go : undefined}
-      role={href ? 'button' : undefined}
-      tabIndex={href ? 0 : undefined}
-      onKeyDown={href ? (e) => e.key === 'Enter' && go() : undefined}
-    >
-      <div className="news-card2h-img" style={capa ? { backgroundImage: `url(${capa})` } : undefined}>
-        {!capa && <Newspaper size={18} strokeWidth={1.5} style={{ color: 'rgba(255,255,255,0.4)' }} />}
-      </div>
-      <div className="news-card2h-body">
-        <span className="news-date-row">
-          {n.fixado && <span className="news-pin news-pin--light"><Pin size={11} /> Fixado</span>}
-          {n.data && <span className="news-date">{formatDataLonga(n.data)}</span>}
-        </span>
-        <h3>{stripEmoji(n.titulo)}</h3>
-      </div>
-    </article>
-  )
-}
 
 function Noticias() {
   const [noticias, setNoticias] = useState<Noticia[]>(NOTICIAS_FALLBACK)
