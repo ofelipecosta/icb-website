@@ -822,7 +822,7 @@ html {
 .news-grid--full { grid-template-columns: repeat(3, 1fr); }
 .news-card { display: flex; flex-direction: column; background: var(--cream); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .news-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(10, 39, 66, 0.12); }
-.news-media { aspect-ratio: 16/9; background: var(--navy); background-size: cover; background-position: center; display: grid; place-items: center; color: rgba(255,255,255,0.6); }
+.news-media { aspect-ratio: 16/9; background: var(--navy); background-size: contain; background-repeat: no-repeat; background-position: center; display: grid; place-items: center; color: rgba(255,255,255,0.6); }
 .news-body { padding: 22px 22px 26px; display: flex; flex-direction: column; gap: 8px; }
 .news-card h3 { font-size: 18px; line-height: 1.2; }
 .news-body p { font-size: 14px; line-height: 1.6; color: var(--muted); }
