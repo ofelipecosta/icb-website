@@ -1014,7 +1014,7 @@ h1, h2, h3 { font-family: var(--serif); }
 @media (max-width: 700px) { .news-featured { grid-template-columns: 1fr; } .news-feat-img { aspect-ratio: 16/9; } }
 
 /* O Clube split layout */
-.oclube-wrap { background: var(--navy-deep); padding: 64px 32px; }
+.oclube-wrap { background: var(--cream); padding: 64px 32px; }
 .oclube-split { position: relative; max-width: 1200px; margin: 0 auto; min-height: 420px; border-radius: 16px; overflow: hidden; display: flex; align-items: stretch; }
 .oclube-split-photo { position: absolute; inset: 0; z-index: 0; }
 .oclube-split-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
