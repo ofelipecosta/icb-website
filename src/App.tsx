@@ -11,8 +11,6 @@ import historiaFoto2 from '../imagens/historia/foto02.jpg'
 import fotoVela from '../imagens/Vela/Vela.png'
 import { motion, useReducedMotion, AnimatePresence } from 'motion/react'
 import {
-  Sailboat,
-  Anchor,
   ArrowRight,
   Menu,
   X,
@@ -21,7 +19,6 @@ import {
   Newspaper,
   CalendarPlus,
   Leaf,
-  Heart,
   Share2,
   Check,
   Pin,
