@@ -470,9 +470,10 @@ function OClube() {
       <div className="oclube-split-photo">
         <div
           className="oclube-split-photo-placeholder"
-          style={{ backgroundImage: `url(${aereo3})`, backgroundSize: 'cover', backgroundPosition: 'center 30%' }}
+          style={{ backgroundImage: `url(${aereo3})` }}
         />
       </div>
+      <div className="oclube-split-overlay" />
     </section>
   )
 }
