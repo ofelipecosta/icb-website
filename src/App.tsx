@@ -1392,24 +1392,6 @@ function NossaHistoria() {
   )
 }
 
-const regrasDeOuro = [
-  'Aderir aos valores do Iate Clube Brasileiro e respeitar a paixão pelo mar.',
-  'Promover os valores do Iate Clube em todas as ocasiões.',
-  'Participar ativamente na vida social do ICB.',
-  'Apresentar-se a outros iate clubes sempre com a bandeira do ICB e do Brasil.',
-  'Indicar sua filiação no ICB durante as regatas e mostrar um número nosso na vela principal (disponível na mesa de Serviços para os Membros).',
-  'Respeitar outros iate clubes em todas as circunstâncias.',
-  'Patrocinar e apoiar jovens membros do Clube e sua Seção de Esportes.',
-  'Convidar outros membros para compartilharem sua paixão pelo Iate Clube.',
-]
-
-const valoresICB = [
-  { Icone: Anchor, titulo: 'Tradição Náutica', desc: 'Mais de 120 anos cultivando os melhores hábitos marinheiros na Baía de Guanabara.' },
-  { Icone: Leaf, titulo: 'Preservação Ambiental', desc: 'Compromisso com o meio ambiente marinho e a sustentabilidade das águas.' },
-  { Icone: Heart, titulo: 'Solidariedade', desc: 'Espírito de união entre membros e amantes do mar, dentro e fora d\'água.' },
-  { Icone: Sailboat, titulo: 'Arte de Viver no Mar', desc: 'Uma filosofia de vida que integra o mar ao cotidiano de cada associado.' },
-]
-
 function DocumentosOficiais() {
   const [docs, setDocs] = useState<Documento[]>([])
   const [loading, setLoading] = useState(true)
