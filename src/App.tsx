@@ -1037,6 +1037,95 @@ function WhatsAppFloat() {
   )
 }
 
+function FAQ() {
+  const [open, setOpen] = useState<number | null>(null)
+
+  const faqs = [
+    {
+      pergunta: "Como posso me tornar membro do Iate Clube Brasileiro?",
+      resposta: "Entre em contato conosco via WhatsApp ou e-mail. Nosso time de secretaria fornecerá todas as informações sobre os processos de associação e documentos necessários."
+    },
+    {
+      pergunta: "Qual é a taxa de associação?",
+      resposta: "As taxas variam conforme a categoria de associação (sênior, pleno, contribuinte, etc.). Solicite informações específicas através dos nossos contatos."
+    },
+    {
+      pergunta: "Posso trazer convidados para as dependências do clube?",
+      resposta: "Sim, associados podem trazer convidados. Consulte as políticas vigentes junto à Secretaria Social para mais detalhes."
+    },
+    {
+      pergunta: "Como funciona a locação das churrasqueiras?",
+      resposta: "As churrasqueiras podem ser reservadas através do portal de associados. Entre em contato com a Secretaria Social para agendamentos."
+    },
+    {
+      pergunta: "Quais são os horários de funcionamento?",
+      resposta: "O clube funciona de segunda a domingo. Os horários específicos variam por departamento. Consulte nosso telefone ou WhatsApp para informações precisas."
+    },
+    {
+      pergunta: "Há escola de vela para crianças e adultos?",
+      resposta: "Sim! A Secretaria Náutica oferece aulas de vela para todas as idades. Inscrições e detalhes disponíveis através dos nossos contatos."
+    },
+    {
+      pergunta: "Como fico atualizado sobre os eventos do clube?",
+      resposta: "Acompanhe nosso site, redes sociais e se inscreva na newsletter para receber informações sobre eventos, regatas e atividades sociais."
+    },
+    {
+      pergunta: "Posso usar a marina para minha embarcação?",
+      resposta: "Sim, temos vagas náuticas disponíveis. Entre em contato com a Secretaria Náutica para informações sobre disponibilidade e valores."
+    }
+  ]
+
+  return (
+    <section className="faq-section">
+      <div className="container">
+        <div className="section-head" style={{ marginBottom: 40, textAlign: 'center' }}>
+          <div className="eyebrow" style={{ marginBottom: 12 }}>Dúvidas</div>
+          <h2>Perguntas Frequentes</h2>
+        </div>
+        <div className="faq-grid">
+          {faqs.map((faq, i) => (
+            <div key={i} className="faq-item">
+              <button
+                className="faq-trigger"
+                onClick={() => setOpen(open === i ? null : i)}
+                aria-expanded={open === i}
+              >
+                <span className="faq-trigger-text">{faq.pergunta}</span>
+                <span className="faq-trigger-icon">{open === i ? '−' : '+'}</span>
+              </button>
+              {open === i && (
+                <div className="faq-content">
+                  <p>{faq.resposta}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function CTAContact() {
+  return (
+    <section className="cta-contact">
+      <div className="cta-contact-inner">
+        <div className="eyebrow">Próximo passo</div>
+        <h2>Tem interesse em fazer parte?</h2>
+        <p>Descubra como se tornar membro do Iate Clube Brasileiro e aproveite todas as experiências que oferecemos.</p>
+        <div className="cta-contact-actions">
+          <a href="https://wa.me/5521973703932" target="_blank" rel="noreferrer" className="btn btn-primary">
+            💬 Conversar via WhatsApp
+          </a>
+          <a href="mailto:secretaria@icb.org.br" className="btn btn-outline" style={{ borderColor: '#fff', color: '#fff' }}>
+            📧 Enviar E-mail
+          </a>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function Footer() {
   return (
     <footer className="footer" id="contato">
@@ -2142,8 +2231,7 @@ function App() {
   const isOuv = page === '#ouvidoria'
   const isContato = page === '#contato'
   const isDocs = page === '#documentos'
-  const isHist = page === '#historia'
-  const isIdfi = page === '#identidade'
+  const isHist = page === '#historia' || page === '#identidade'
   const isInst = page === '#instalacoes'
   const isRegatas = page === '#regatas'
   const isSecNaut = page === '#secretaria-nautica'
@@ -2156,7 +2244,7 @@ function App() {
   const subPage = noticiaSlug ? <NoticiaDetalhe slug={noticiaSlug} /> :
     eventoSlug ? <EventoDetalhe slug={eventoSlug} /> :
     isAdm ? <Administracao /> : isOuv ? <ContatoPage /> : isDocs ? <DocumentosOficiais /> : isContato ? <ContatoPage /> :
-    isHist ? <NossaHistoria /> : isIdfi ? <IdentidadeFilosofia /> : isInst ? <Instalacoes /> :
+    isHist ? <NossaHistoria /> : isInst ? <Instalacoes /> :
     isRegatas ? <VelasRegatas /> : isSecNaut ? <SecretariaNautica /> : isEventos ? <Eventos /> :
     isNoticias ? <TodasNoticias /> : null
 
@@ -2178,6 +2266,8 @@ function App() {
           </main>
         </PageTransition>
       )}
+      <FAQ />
+      <CTAContact />
       <Footer />
       <WhatsAppFloat />
     </>
