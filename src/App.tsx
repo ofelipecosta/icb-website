@@ -1156,10 +1156,10 @@ function Footer() {
           <a href="mailto:secretaria@icb.org.br">secretaria@icb.org.br</a>
           <div className="footer-social">
             <a href="https://instagram.com/iateclubebrasileiro" target="_blank" rel="noreferrer" aria-label="Instagram">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E4405F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37" stroke="#E4405F"></path><circle cx="17.5" cy="6.5" r="1.5" fill="#E4405F" stroke="none"></circle></svg>
+              <i className="fab fa-instagram"></i>
             </a>
             <a href="https://facebook.com/iateclubebrasileiro" target="_blank" rel="noreferrer" aria-label="Facebook">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877F2"><path d="M18 2h-3a6 6 0 0 0-6 6v3H7v4h3v8h4v-8h3l1-4h-4V8a1 1 0 0 1 1-1h3z"></path></svg>
+              <i className="fab fa-facebook"></i>
             </a>
           </div>
         </div>
