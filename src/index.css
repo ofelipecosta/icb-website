@@ -1070,7 +1070,8 @@ h1, h2, h3 { font-family: var(--serif); }
 @media (max-width: 600px) { .ev-feat { grid-template-columns: 1fr; } .ev-feat-cal { flex-direction: row; gap: 14px; padding: 16px 24px; justify-content: flex-start; } .ev-feat-day { font-size: 40px; } }
 
 /* ===== Regatas home section ===== */
-.regatas-home { background: var(--navy-deep); padding: 72px 0; }
+.regatas-home { background: var(--cream); padding: 0 32px 64px; }
+.regatas-home .container { background: var(--navy-deep); border-radius: 16px; padding: 56px 48px; max-width: 1200px; }
 .regatas-home .section-head h2 { color: #fff; }
 .regatas-home .section-head h2 em { color: var(--gold); font-style: italic; }
 .regatas-home .section-link { color: rgba(255,255,255,0.55); transition: color 0.15s; }
