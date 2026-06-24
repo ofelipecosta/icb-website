@@ -2159,12 +2159,9 @@ function App() {
             <OClube />
             <EventosCards />
             <Noticias />
-            <RegatasHome />
           </main>
         </PageTransition>
       )}
-      <FAQ />
-      <CTAContact />
       <Footer />
       <WhatsAppFloat />
     </>

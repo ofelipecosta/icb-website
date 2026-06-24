@@ -966,7 +966,7 @@ html {
 .faq-item { background: #fff; border: 1px solid rgba(10,39,66,0.08); border-radius: 12px; overflow: hidden; }
 .faq-trigger { width: 100%; padding: 20px 24px; background: transparent; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; font-family: var(--sans); font-size: 15px; font-weight: 600; color: #0a2742; text-align: left; transition: background 0.2s; }
 .faq-trigger:hover { background: rgba(10,39,66,0.04); }
-.faq-trigger-icon { font-size: 20px; color: #c8980f; font-weight: 700; flex-shrink: 0; }
+.faq-trigger-icon { font-size: 20px; color: #c41e3a; font-weight: 700; flex-shrink: 0; }
 .faq-content { padding: 0 24px 24px; border-top: 1px solid rgba(10,39,66,0.06); animation: slideDown 0.3s ease; }
 .faq-content p { font-size: 14px; color: #5e6b78; line-height: 1.7; margin: 0; }
 @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -1087,7 +1087,7 @@ h1, h2, h3 { font-family: var(--serif); }
 @media (max-width: 700px) { .hero-thumb-nav { display: none; } }
 
 /* Section gold eyebrow */
-.eyebrow-gold { color: #9a6c0a; }
+.eyebrow-gold { color: #c41e3a; }
 
 /* Footer tagline italic */
 .footer-tagline { font-family: var(--serif); font-style: italic; font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 12px; }
@@ -1108,11 +1108,11 @@ h1, h2, h3 { font-family: var(--serif); }
 
 /* ===== Regatas home section ===== */
 .regatas-home { background: var(--cream); padding: 0 32px 64px; }
-.regatas-home .container { background: var(--navy-deep); border-radius: 16px; padding: 56px 48px; max-width: 1200px; }
-.regatas-home .section-head h2 { color: #fff; }
-.regatas-home .section-head h2 em { color: var(--gold); font-style: italic; }
-.regatas-home .section-link { color: rgba(255,255,255,0.55); transition: color 0.15s; }
-.regatas-home .section-link:hover { color: rgba(255,255,255,0.9); }
+.regatas-home .container { background: transparent; border-radius: 0; padding: 56px 0; max-width: 1200px; }
+.regatas-home .section-head h2 { color: var(--navy); }
+.regatas-home .section-head h2 em { color: #c41e3a; font-style: italic; }
+.regatas-home .section-link { color: #c41e3a; transition: color 0.15s; }
+.regatas-home .section-link:hover { color: #a01829; }
 .reg-home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 28px; }
 .reg-home-item { background: rgba(255,255,255,0.04); border: 0.5px solid rgba(255,255,255,0.09); border-radius: 12px; padding: 18px 22px; display: flex; align-items: center; gap: 18px; transition: background 0.15s; text-decoration: none; }
 .reg-home-item:hover { background: rgba(255,255,255,0.08); }
