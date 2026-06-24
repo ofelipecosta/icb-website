@@ -960,7 +960,7 @@ html {
 
 /* ===== FAQ Section ===== */
 .faq-section { background: var(--cream); padding: 88px 32px; }
-.faq-section .section-head { margin-bottom: 48px; }
+.faq-section .section-head { margin-bottom: 48px; text-align: center; }
 .faq-section h2 { font-size: clamp(32px, 4vw, 48px); }
 .faq-grid { max-width: 800px; margin: 0 auto; display: grid; gap: 12px; }
 .faq-item { background: #fff; border: 1px solid rgba(10,39,66,0.08); border-radius: 12px; overflow: hidden; }
