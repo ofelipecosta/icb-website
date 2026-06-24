@@ -235,6 +235,15 @@ function Header({ currentPage }: { currentPage?: string }) {
     const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
     return active?.href ?? null
   })
+  const isHome = !currentPage || currentPage === '#' || currentPage === ''
+  const [atTop, setAtTop] = useState(true)
+  useEffect(() => {
+    if (!isHome) { setAtTop(false); return }
+    setAtTop(window.scrollY < 60)
+    const onScroll = () => setAtTop(window.scrollY < 60)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [isHome])
 
   useEffect(() => {
     const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
@@ -265,10 +274,10 @@ function Header({ currentPage }: { currentPage?: string }) {
 
   return (
     <>
-    <header className="header">
+    <header className={`header${isHome && atTop ? ' header--atop' : ''}`}>
       <div className="container header-inner">
         <a className="brand" href="#">
-          <img src={logoICB} alt="Iate Clube Brasileiro" className="brand-logo" />
+          <img src={isHome && atTop ? logoICBBranco : logoICB} alt="Iate Clube Brasileiro" className="brand-logo" />
         </a>
         <nav className="nav">
           <span className="nav-links">
@@ -479,6 +488,32 @@ function OClube() {
 
 
 
+const MONTHS_PT = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ']
+const WEEKDAYS_PT = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+
+function EventoFeatCard({ ev }: { ev: Evento }) {
+  const href = ev.slug ? `#evento/${ev.slug}` : undefined
+  const go = () => href && (window.location.hash = href.slice(1))
+  const d = ev.data ? new Date(ev.data + 'T12:00:00') : null
+  const dValid = d && !isNaN(d.getTime())
+  return (
+    <article className="ev-feat" onClick={href ? go : undefined} role={href ? 'button' : undefined} tabIndex={href ? 0 : undefined}>
+      <div className="ev-feat-cal">
+        {dValid ? <><span className="ev-feat-month">{MONTHS_PT[d!.getMonth()]}</span><span className="ev-feat-day">{d!.getDate()}</span><span className="ev-feat-weekday">{WEEKDAYS_PT[d!.getDay()]}</span></> : <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>—</span>}
+      </div>
+      <div className="ev-feat-body">
+        {ev.categoria && <div className="ev-feat-cat">{ev.categoria}</div>}
+        <h3 className="ev-feat-title">{ev.titulo}</h3>
+        {ev.local && <div className="ev-feat-local"><MapPin size={12} /> {ev.local}</div>}
+        <div className="ev-feat-actions">
+          {href && <span className="news-feat-link">Ver detalhes »</span>}
+          {ev.linkUrl && <a className="news-feat-link" {...linkProps(ev.linkUrl)} onClick={e => e.stopPropagation()}>{ev.ctaLabel || 'Inscrições'} »</a>}
+        </div>
+      </div>
+    </article>
+  )
+}
+
 function EventosCards() {
   const [eventos, setEventos] = useState<Evento[]>(EVENTOS_FALLBACK)
 
@@ -488,7 +523,8 @@ function EventosCards() {
     return () => { active = false }
   }, [])
 
-  const cards = eventos.slice(0, 3)
+  const featured = eventos[0]
+  const cards = eventos.slice(1, 4)
 
   return (
     <section className="ev-cards-section">
@@ -497,13 +533,14 @@ function EventosCards() {
           <div className="section-head" style={{ marginBottom: 32 }}>
             <div>
               <div className="eyebrow">Agenda do clube</div>
-              <h2>Próximos Eventos</h2>
+              <h2>Próximos <em style={{ fontStyle: 'italic', color: 'var(--brass)' }}>Eventos</em></h2>
             </div>
             <a className="section-link" href="#eventos">
               Ver calendário completo <ArrowRight size={15} />
             </a>
           </div>
         </Reveal>
+        {featured && <Reveal><EventoFeatCard ev={featured} /></Reveal>}
         <div className="nc-grid">
           {cards.map((ev, i) => {
             const img = urlForImage(ev.imagem)
@@ -2141,6 +2178,7 @@ function App() {
             <Noticias />
             <EventosCards />
             <OClube />
+            <RegatasHome />
             <InstalacoeHome />
           </main>
         </PageTransition>
@@ -2148,6 +2186,51 @@ function App() {
       <Footer />
       <WhatsAppFloat />
     </>
+  )
+}
+
+function RegatasHome() {
+  const [regatas, setRegatas] = useState(REGATAS_FALLBACK)
+
+  useEffect(() => {
+    let active = true
+    getRegatas().then((d) => active && setRegatas(d))
+    return () => { active = false }
+  }, [])
+
+  return (
+    <section className="regatas-home">
+      <div className="container">
+        <Reveal>
+          <div className="section-head">
+            <div>
+              <div className="eyebrow" style={{ color: 'var(--gold)' }}>Náutica</div>
+              <h2>Próximas <em>regatas</em></h2>
+            </div>
+            <a className="section-link" href="#regatas">Ver calendário náutico <ArrowRight size={15} /></a>
+          </div>
+        </Reveal>
+        <Reveal>
+          <div className="reg-home-grid">
+            {regatas.slice(0, 4).map((r) => {
+              const d = r.data ? new Date(r.data + 'T12:00:00') : null
+              return (
+                <a key={r._id} className="reg-home-item" {...(r.inscricoes ? linkProps(r.inscricoes) : {})}>
+                  <div className="reg-home-cal">
+                    {d && <><span className="reg-home-cal-month">{MONTHS_PT[d.getMonth()]}</span><span className="reg-home-cal-day">{d.getDate()}</span></>}
+                  </div>
+                  <div className="reg-home-body">
+                    <div className="reg-home-titulo">{r.titulo}</div>
+                    {r.classes && <div className="reg-home-classes">{r.classes}</div>}
+                  </div>
+                  {r.inscricoes && <span className="reg-home-cta">Inscrições »</span>}
+                </a>
+              )
+            })}
+          </div>
+        </Reveal>
+      </div>
+    </section>
   )
 }
 
