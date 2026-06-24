@@ -452,7 +452,7 @@ function Hero() {
 
 function OClube() {
   return (
-    <section className="oclube-split" id="clube">
+    <div className="oclube-wrap" id="clube"><section className="oclube-split">
       <div className="oclube-split-text">
         <Reveal>
           <>
@@ -474,7 +474,7 @@ function OClube() {
         />
       </div>
       <div className="oclube-split-overlay" />
-    </section>
+    </section></div>
   )
 }
 
