@@ -424,14 +424,16 @@ function Hero() {
           </motion.div>
         </motion.div>
       </div>
-      <div className="hero-dots">
-        {heroSlides.map((_, i) => (
+      <div className="hero-thumb-nav">
+        {heroSlides.map((src, i) => (
           <button
             key={i}
-            className={`hero-dot${i === current ? ' hero-dot--active' : ''}`}
+            className={`hero-thumb-btn${i === current ? ' active' : ''}`}
             onClick={() => setCurrent(i)}
             aria-label={`Foto ${i + 1}`}
-          />
+          >
+            <img src={src} alt="" draggable={false} />
+          </button>
         ))}
       </div>
       <a className="hero-scrollcue" href="#clube" aria-label="Rolar para conhecer o clube">
@@ -450,32 +452,26 @@ function Hero() {
 
 function OClube() {
   return (
-    <section className="about" id="clube">
-      <div className="container about-grid">
+    <section className="oclube-split" id="clube">
+      <div className="oclube-split-text">
         <Reveal>
-          <div className="about-copy">
-            <div className="eyebrow">O Clube</div>
-            <h2>Tradição náutica à beira da Baía de Guanabara.</h2>
-            <p>
-              Fundado em 1906, o Iate Clube Brasileiro é o decano do iatismo nacional.
+          <>
+            <div className="eyebrow" style={{ color: '#c8980f', marginBottom: 10 }}>O Clube</div>
+            <h2 className="oclube-split-h">Tradição náutica<br />à beira da <em>baía</em></h2>
+            <p className="oclube-split-p">
+              Fundado em 1906, o Iate Clube Brasileiro é o decano da vela nacional.
               Mais de um século formando velejadores, recebendo regatas oficiais e
               acolhendo famílias em uma das vistas mais bonitas de Niterói.
             </p>
-            <p>
-              Da escola de vela às modalidades sociais, o clube une esporte, história
-              e convívio em um mesmo lugar — onde cada geração deixa sua marca no mar.
-            </p>
-            <a className="btn btn-outline" href="#historia">Conheça nossa história <ArrowRight size={16} /></a>
-          </div>
+            <a className="oclube-split-btn" href="#historia">Conheça nossa história <ArrowRight size={14} /></a>
+          </>
         </Reveal>
-        <Reveal delay={0.12}>
-          <div
-            className="about-figure"
-            role="img"
-            aria-label="Vista aérea do Iate Clube Brasileiro na Baía de Guanabara"
-            style={{ backgroundImage: `url(${aereo3})`, backgroundSize: 'cover', backgroundPosition: 'center 30%' }}
-          />
-        </Reveal>
+      </div>
+      <div className="oclube-split-photo">
+        <div
+          className="oclube-split-photo-placeholder"
+          style={{ backgroundImage: `url(${aereo3})`, backgroundSize: 'cover', backgroundPosition: 'center 30%' }}
+        />
       </div>
     </section>
   )
@@ -595,10 +591,10 @@ function Noticias() {
 
   if (!noticias.length) return null
 
-  const hero = noticias[0]
-  const heroImg = urlForImage(hero.capa)
-  const heroHref = hero.slug ? `#noticia/${hero.slug}` : undefined
-  const middle = noticias.slice(1, 4)
+  const featured = noticias[0]
+  const featImg = urlForImage(featured.capa)
+  const featHref = featured.slug ? `#noticia/${featured.slug}` : undefined
+  const rest = noticias.slice(1, 4)
 
   return (
     <section className="section section-alt" id="noticias">
@@ -606,47 +602,46 @@ function Noticias() {
         <Reveal>
           <div className="section-head">
             <div>
-              <div className="eyebrow">Fique por dentro</div>
-              <h2>Últimas notícias</h2>
+              <div className="eyebrow eyebrow-gold">Notícias</div>
+              <h2>Fique por <em style={{ fontStyle: 'italic', color: 'var(--brass)' }}>dentro</em></h2>
             </div>
+            <a className="section-link" href="#noticias">Ver todas as notícias <ArrowRight size={15} /></a>
           </div>
         </Reveal>
 
         <Reveal>
           <article
-            className={`news-hero${heroHref ? ' news-card--link' : ''}`}
-            onClick={heroHref ? () => { window.location.hash = heroHref.slice(1) } : undefined}
-            role={heroHref ? 'button' : undefined}
-            tabIndex={heroHref ? 0 : undefined}
-            onKeyDown={heroHref ? (e) => e.key === 'Enter' && (window.location.hash = heroHref!.slice(1)) : undefined}
+            className={`news-featured${featHref ? ' news-card--link' : ''}`}
+            onClick={featHref ? () => { window.location.hash = featHref.slice(1) } : undefined}
+            role={featHref ? 'button' : undefined}
+            tabIndex={featHref ? 0 : undefined}
+            onKeyDown={featHref ? (e) => e.key === 'Enter' && (window.location.hash = featHref!.slice(1)) : undefined}
           >
-            <div className="news-hero-bg" style={heroImg ? { backgroundImage: `url(${heroImg})` } : undefined} />
-            <div className="news-hero-overlay" />
-            <div className="news-hero-content">
-              {hero.fixado && <span className="news-pin"><Pin size={12} /> Fixado</span>}
-              {hero.data && <span className="news-date" style={{ color: 'rgba(255,255,255,0.65)' }}>{formatDataLonga(hero.data)}</span>}
-              <h3>{stripEmoji(hero.titulo)}</h3>
-              {hero.resumo && <p>{hero.resumo}</p>}
-              {heroHref && <span className="news-read-more" style={{ color: '#fff', opacity: 0.85 }}>Ler notícia completa <ArrowRight size={13} /></span>}
+            <div className="news-feat-img">
+              {featImg
+                ? <img src={featImg} alt={stripEmoji(featured.titulo)} draggable={false} />
+                : <div className="news-feat-img-placeholder"><Newspaper size={32} strokeWidth={1.2} /></div>
+              }
+              {featured.fixado && <span className="news-feat-pin"><Pin size={10} /> Fixado</span>}
+            </div>
+            <div className="news-feat-body">
+              <div>
+                {featured.data && <div className="news-feat-date">{formatDataLonga(featured.data)}</div>}
+                <h3 className="news-feat-title">{stripEmoji(featured.titulo)}</h3>
+                {featured.resumo && <p className="news-feat-resumo">{stripEmoji(featured.resumo)}</p>}
+              </div>
+              {featHref && <span className="news-feat-link">Saiba mais »</span>}
             </div>
           </article>
         </Reveal>
 
-        {middle.length > 0 && (
+        {rest.length > 0 && (
           <div className="nc-grid" style={{ marginTop: 20 }}>
-            {middle.map((n, i) => (
+            {rest.map((n, i) => (
               <Reveal key={n._id} delay={i * 0.08}><NewsCard3 n={n} /></Reveal>
             ))}
           </div>
         )}
-
-        <Reveal>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 24 }}>
-            <a className="section-link" href="#noticias">
-              Ver todas as notícias <ArrowRight size={15} />
-            </a>
-          </div>
-        </Reveal>
       </div>
     </section>
   )
