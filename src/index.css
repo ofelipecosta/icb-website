@@ -160,18 +160,7 @@ html {
   background: rgba(246, 243, 236, 0.92);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line);
-  transition: background 0.3s ease, border-color 0.3s ease;
 }
-.header--atop {
-  background: rgba(6, 25, 46, 0.42);
-  border-bottom-color: rgba(255,255,255,0.07);
-}
-.header--atop .nav a { color: rgba(255,255,255,0.85); }
-.header--atop .nav a:hover { color: #fff; }
-.header--atop .nav a.active,
-.header--atop .nav-dropdown-trigger.active { color: var(--gold) !important; }
-.header--atop .nav-toggle { color: rgba(255,255,255,0.9); border: none; }
-.header--atop .nav-cta-mobile { color: rgba(255,255,255,0.85); }
 .header-inner {
   display: flex;
   align-items: center;

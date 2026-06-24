@@ -235,15 +235,6 @@ function Header({ currentPage }: { currentPage?: string }) {
     const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
     return active?.href ?? null
   })
-  const isHome = !currentPage || currentPage === '#' || currentPage === ''
-  const [atTop, setAtTop] = useState(true)
-  useEffect(() => {
-    if (!isHome) { setAtTop(false); return }
-    setAtTop(window.scrollY < 60)
-    const onScroll = () => setAtTop(window.scrollY < 60)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [isHome])
 
   useEffect(() => {
     const active = navLinks.find(l => l.submenu?.some(s => s.href === currentPage))
@@ -274,10 +265,10 @@ function Header({ currentPage }: { currentPage?: string }) {
 
   return (
     <>
-    <header className={`header${isHome && atTop ? ' header--atop' : ''}`}>
+    <header className="header">
       <div className="container header-inner">
         <a className="brand" href="#">
-          <img src={isHome && atTop ? logoICBBranco : logoICB} alt="Iate Clube Brasileiro" className="brand-logo" />
+          <img src={logoICB} alt="Iate Clube Brasileiro" className="brand-logo" />
         </a>
         <nav className="nav">
           <span className="nav-links">
